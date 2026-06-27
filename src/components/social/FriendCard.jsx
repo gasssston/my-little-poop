@@ -31,6 +31,7 @@ export default function FriendCard({ friend, onRemove }) {
         </div>
         <div>
           <p className="text-sm font-semibold text-text-primary">{friend.peer?.name || 'Desconocido'}</p>
+          <p className="text-[11px] text-text-secondary truncate max-w-45">{friend.peer?.email}</p>
           <p className="text-xs text-text-secondary flex items-center gap-1"><Flame className="w-3 h-3" /> {friend.streak || 0} días de racha</p>
         </div>
       </div>

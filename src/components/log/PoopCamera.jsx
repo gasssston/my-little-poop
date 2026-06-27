@@ -55,7 +55,12 @@ export default function PoopCamera({ onAnalysisComplete }) {
       onAnalysisComplete?.(result)
       toast.success('Análisis completado 🔬')
     } catch (err) {
-      toast.error(err.message || 'Error al analizar la imagen')
+      const msg = err.message || ''
+      if (msg.includes('rate') || msg.includes('429') || msg.includes('no disponible')) {
+        toast.error('El servicio de análisis no está disponible en este momento. Por favor, inténtalo de nuevo más tarde.')
+      } else {
+        toast.error('Error al analizar la imagen. Por favor, inténtalo de nuevo.')
+      }
       setAnalysisResult(null)
     } finally {
       setAnalyzing(false)

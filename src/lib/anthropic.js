@@ -42,8 +42,10 @@ Si la imagen no muestra claramente heces o no puedes analizarla, devuelve: {"err
  */
 const MODELS = [
   'google/gemma-4-31b-it:free',
-  // 'google/gemma-4-26b-a4b-it:free',
-  // 'nvidia/nemotron-nano-12b-v2-vl:free',
+  'google/gemma-4-26b-a4b-it:free',
+  'nvidia/nemotron-nano-12b-v2-vl:free',
+  'nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free',
+  'nvidia/llama-nemotron-rerank-vl-1b-v2:free'
 ]
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -115,7 +117,7 @@ export async function analyzePoopImage(base64Image, mimeType) {
     }
   }
 
-  throw lastError || new Error('Todos los modelos están temporalmente no disponibles. Inténtalo de nuevo en unos segundos.')
+  throw lastError || new Error('El servicio de análisis no está disponible en este momento. Por favor, inténtalo de nuevo más tarde.')
 }
 
 /**
