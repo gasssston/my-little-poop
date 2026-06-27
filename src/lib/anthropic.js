@@ -42,9 +42,11 @@ Si la imagen no muestra claramente heces o no puedes analizarla, devuelve: {"err
  */
 const MODELS = [
   'google/gemma-4-31b-it:free',
-  'google/gemini-2.0-flash-001:free',
-  'meta-llama/llama-4-scout:free',
+  // 'google/gemma-4-26b-a4b-it:free',
+  // 'nvidia/nemotron-nano-12b-v2-vl:free',
 ]
+
+const delay = (ms) => new Promise((r) => setTimeout(r, ms))
 
 export async function analyzePoopImage(base64Image, mimeType) {
   const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
@@ -54,9 +56,12 @@ export async function analyzePoopImage(base64Image, mimeType) {
 
   let lastError = null
 
-  for (const model of MODELS) {
-    try {
-      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  // Dos pasadas: primera sin delay, segunda con 2s entre intentos
+  for (let pass = 0; pass < 2; pass++) {
+    for (const model of MODELS) {
+      try {
+        if (pass === 1) await delay(2000)
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -106,6 +111,7 @@ export async function analyzePoopImage(base64Image, mimeType) {
       lastError = err
       if (err.message?.includes('rate') || err.message?.includes('429')) continue
       throw err
+    }
     }
   }
 
