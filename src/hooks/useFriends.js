@@ -2,6 +2,13 @@ import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './useAuth'
 
+function stripAccents(str) {
+  return str
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+}
+
 export function useFriends() {
   const { user } = useAuth()
   const [friends, setFriends] = useState([])
@@ -112,17 +119,32 @@ export function useFriends() {
 
   const searchUsers = async (query) => {
     if (!query || query.length < 2) return []
-    const { data } = await supabase.rpc('search_users', { query })
+
+    // Traer todos los perfiles y filtrar en cliente con soporte de tildes
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, name, email, avatar_url')
+      .neq('id', user.id)
+      .limit(50)
+
+    if (error || !data) return []
+
+    const q = stripAccents(query)
+
+    const results = data.filter((p) => {
+      const name = stripAccents(p.name || '')
+      const email = stripAccents(p.email || '')
+      return name.includes(q) || email.includes(q)
+    })
 
     // Excluir amigos y solicitudes pendientes
     const excludeIds = new Set([
       ...friends.map((f) => f.peer?.id).filter(Boolean),
       ...pending.map((f) => f.peer?.id).filter(Boolean),
       ...sent.map((f) => f.peer?.id).filter(Boolean),
-      user.id,
     ])
 
-    return (data || []).filter((p) => !excludeIds.has(p.id))
+    return results.filter((p) => !excludeIds.has(p.id)).slice(0, 10)
   }
 
   const sendRequest = async (userId) => {
