@@ -19,6 +19,23 @@ import Slider from '../ui/Slider'
 import Toggle from '../ui/Toggle'
 import PoopCamera from './PoopCamera'
 
+// Convertir Date a string local para input datetime-local
+function toLocalDatetimeString(date) {
+  const d = new Date(date)
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  const hours = String(d.getHours()).padStart(2, '0')
+  const minutes = String(d.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
+}
+
+// Convertir string de datetime-local a ISO con timezone local
+function localDatetimeToISO(localStr) {
+  const date = new Date(localStr)
+  return date.toISOString()
+}
+
 export default function LogForm({ initialData, onSuccess }) {
   const { addLog, updateLog } = useLogs()
   const { user } = useAuth()
@@ -41,8 +58,8 @@ export default function LogForm({ initialData, onSuccess }) {
       had_farts: initialData?.had_farts || false,
       satisfaction_level: initialData?.satisfaction_level || 3,
       logged_at: initialData?.logged_at
-        ? new Date(initialData.logged_at).toISOString().slice(0, 16)
-        : new Date().toISOString().slice(0, 16),
+        ? toLocalDatetimeString(new Date(initialData.logged_at))
+        : toLocalDatetimeString(new Date()),
       emoji: initialData?.emoji || '',
       notes: initialData?.notes || '',
     },
@@ -97,7 +114,7 @@ export default function LogForm({ initialData, onSuccess }) {
 
       const payload = {
         ...data,
-        logged_at: new Date(data.logged_at).toISOString(),
+        logged_at: localDatetimeToISO(data.logged_at),
         photo_url: photoUrl,
         ai_bristol_type: aiResult?.bristol_type || null,
         ai_bristol_label: aiResult?.bristol_label || null,
