@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS poop_logs (
   pain_level INT CHECK (pain_level BETWEEN 0 AND 5),
   had_blood BOOLEAN DEFAULT FALSE,
   had_straining BOOLEAN DEFAULT FALSE,
+  had_splash BOOLEAN DEFAULT FALSE,
+  had_farts BOOLEAN DEFAULT FALSE,
   satisfaction_level INT CHECK (satisfaction_level BETWEEN 1 AND 5),
   notes TEXT,
   emoji TEXT,

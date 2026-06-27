@@ -9,6 +9,7 @@ import HistoryPage from './pages/HistoryPage'
 import AccountPage from './pages/AccountPage'
 import FriendsPage from './pages/FriendsPage'
 import CelebrationPage from './pages/CelebrationPage'
+import { Analytics } from "@vercel/analytics/react"
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -90,6 +91,7 @@ export default function App() {
             },
           }}
         />
+        <Analytics />
         <AppRoutes />
       </AuthProvider>
     </BrowserRouter>

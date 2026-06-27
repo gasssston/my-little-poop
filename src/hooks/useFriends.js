@@ -9,6 +9,29 @@ function stripAccents(str) {
     .toLowerCase()
 }
 
+function calcStreak(logs) {
+  if (!logs || logs.length === 0) return 0
+  const dates = [...new Set(
+    logs.map((l) => new Date(l.logged_at).toDateString())
+  )].sort((a, b) => new Date(b) - new Date(a))
+
+  const today = new Date().toDateString()
+  if (dates[0] !== today) return 0
+
+  let streak = 1
+  for (let i = 0; i < dates.length - 1; i++) {
+    const current = new Date(dates[i])
+    const prev = new Date(dates[i + 1])
+    const diffDays = (current - prev) / (1000 * 60 * 60 * 24)
+    if (diffDays === 1) {
+      streak++
+    } else {
+      break
+    }
+  }
+  return streak
+}
+
 export function useFriends() {
   const { user } = useAuth()
   const [friends, setFriends] = useState([])
@@ -77,11 +100,16 @@ export function useFriends() {
       sentProfiles = profiles || []
     }
 
-    // Obtener rachas de amigos
-    let friendMap = {}
+    // Obtener logs de amigos para calcular rachas en cliente
+    let friendLogsMap = {}
     for (const id of friendIds) {
-      const { data: streak } = await supabase.rpc('get_user_streak', { uid: id })
-      friendMap[id] = streak || 0
+      const { data: logs } = await supabase
+        .from('poop_logs')
+        .select('logged_at')
+        .eq('user_id', id)
+        .order('logged_at', { ascending: false })
+        .limit(60)
+      friendLogsMap[id] = logs || []
     }
 
     setFriends(
@@ -91,7 +119,7 @@ export function useFriends() {
         return {
           ...f,
           peer: profile || null,
-          streak: friendMap[peerId] || 0,
+          streak: calcStreak(friendLogsMap[peerId]),
         }
       })
     )

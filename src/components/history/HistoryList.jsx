@@ -13,7 +13,7 @@ const dateFilters = [
 ]
 
 export default function HistoryList() {
-  const { logs, loading } = useLogs()
+  const { logs, loading, deleteLog } = useLogs()
   const [dateFilter, setDateFilter] = useState(3)
   const [typeFilter, setTypeFilter] = useState('')
   const [editingLog, setEditingLog] = useState(null)
@@ -109,7 +109,7 @@ export default function HistoryList() {
       ) : (
         <div className="space-y-3">
           {filteredLogs.map((log) => (
-            <LogCard key={log.id} log={log} onEdit={setEditingLog} />
+            <LogCard key={log.id} log={log} onEdit={setEditingLog} onDelete={deleteLog} />
           ))}
         </div>
       )}

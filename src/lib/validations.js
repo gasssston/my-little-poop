@@ -35,6 +35,8 @@ export const poopLogSchema = z.object({
   pain_level: z.number().min(0).max(5),
   had_blood: z.boolean(),
   had_straining: z.boolean(),
+  had_splash: z.boolean().optional(),
+  had_farts: z.boolean().optional(),
   satisfaction_level: z.number().min(1).max(5),
   logged_at: z.string().min(1, 'Fecha requerida'),
   emoji: z.string().optional(),

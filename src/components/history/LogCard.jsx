@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { isToday, isYesterday, format } from 'date-fns'
 import { es } from 'date-fns/locale'
 import { Pencil, Trash2 } from 'lucide-react'
-import { useLogs } from '../../hooks/useLogs'
 import { supabase } from '../../lib/supabase'
 import { getHealthStatusColor } from '../../lib/anthropic'
 import { toast } from 'sonner'
@@ -33,14 +32,13 @@ function getPhotoUrl(photoUrl) {
   return data?.publicUrl || null
 }
 
-export default function LogCard({ log, onEdit }) {
-  const { deleteLog } = useLogs()
+export default function LogCard({ log, onEdit, onDelete }) {
   const [confirming, setConfirming] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
   const handleDelete = async () => {
     try {
-      await deleteLog(log.id)
+      await onDelete(log.id)
       toast.success('Registro eliminado 🗑️')
     } catch {
       toast.error('Error al eliminar')
@@ -118,6 +116,16 @@ export default function LogCard({ log, onEdit }) {
           {log.had_straining && (
             <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-0.5 rounded-full">
               Esfuerzo 💪
+            </span>
+          )}
+          {log.had_splash && (
+            <span className="bg-[#5BA8C8]/10 text-[#5BA8C8] text-xs font-semibold px-2 py-0.5 rounded-full">
+              Salpicó 💦
+            </span>
+          )}
+          {log.had_farts && (
+            <span className="bg-accent-hover/10 text-accent-hover text-xs font-semibold px-2 py-0.5 rounded-full">
+              Pedos 💨
             </span>
           )}
         </div>

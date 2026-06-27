@@ -37,6 +37,8 @@ export default function LogForm({ initialData, onSuccess }) {
       pain_level: initialData?.pain_level ?? 0,
       had_blood: initialData?.had_blood || false,
       had_straining: initialData?.had_straining || false,
+      had_splash: initialData?.had_splash || false,
+      had_farts: initialData?.had_farts || false,
       satisfaction_level: initialData?.satisfaction_level || 3,
       logged_at: initialData?.logged_at
         ? new Date(initialData.logged_at).toISOString().slice(0, 16)
@@ -229,6 +231,16 @@ export default function LogForm({ initialData, onSuccess }) {
           checked={formValues.had_straining}
           onChange={(v) => setValue('had_straining', v)}
           label="💪 ¿Hubo mucho esfuerzo?"
+        />
+        <Toggle
+          checked={formValues.had_splash}
+          onChange={(v) => setValue('had_splash', v)}
+          label="💦 ¿Ha salpicado?"
+        />
+        <Toggle
+          checked={formValues.had_farts}
+          onChange={(v) => setValue('had_farts', v)}
+          label="💨 ¿Ha venido con pedos?"
         />
       </Card>
 
