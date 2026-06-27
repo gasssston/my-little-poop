@@ -26,7 +26,7 @@ export default function Sidebar() {
     <aside className="hidden md:flex flex-col w-60 h-screen bg-cream-card border-r border-border fixed left-0 top-0 z-40">
       <div className="p-6 border-b border-border/50">
         <h1 className="text-xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <span className="text-2xl">💩</span> PoopLog
+          <span className="text-2xl">💩</span> My Little Poop
         </h1>
       </div>
 

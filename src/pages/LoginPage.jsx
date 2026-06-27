@@ -7,7 +7,7 @@ export default function LoginPage() {
         <div className="text-center mb-8">
           <span className="text-6xl block mb-3">💩</span>
           <h1 className="text-3xl font-extrabold text-text-primary font-[family-name:var(--font-display)]">
-            PoopLog
+            My Little Poop
           </h1>
           <p className="text-text-secondary mt-1">Registra tus deposiciones con estilo ✨</p>
         </div>

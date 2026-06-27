@@ -51,7 +51,7 @@ export async function analyzePoopImage(base64Image, mimeType) {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`,
       'HTTP-Referer': window.location.origin,
-      'X-Title': 'PoopLog',
+      'X-Title': 'My Little Poop',
     },
     body: JSON.stringify({
       model: 'google/gemma-4-31b-it:free',
