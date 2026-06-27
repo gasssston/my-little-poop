@@ -7,6 +7,8 @@ import RegisterPage from './pages/RegisterPage'
 import LogPage from './pages/LogPage'
 import HistoryPage from './pages/HistoryPage'
 import AccountPage from './pages/AccountPage'
+import FriendsPage from './pages/FriendsPage'
+import CelebrationPage from './pages/CelebrationPage'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -63,6 +65,8 @@ function AppRoutes() {
         <Route index element={<Navigate to="/app/log" replace />} />
         <Route path="log" element={<LogPage />} />
         <Route path="history" element={<HistoryPage />} />
+        <Route path="friends" element={<FriendsPage />} />
+        <Route path="celebration" element={<CelebrationPage />} />
         <Route path="account" element={<AccountPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />

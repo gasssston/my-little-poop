@@ -66,3 +66,14 @@ input[type="color"]::-webkit-color-swatch {
   border: 2px solid var(--color-border);
   border-radius: 9999px;
 }
+
+@keyframes poop-bounce {
+  0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
+  25%       { transform: translateY(-20px) rotate(5deg) scale(1.1); }
+  50%       { transform: translateY(-35px) rotate(-3deg) scale(1.15); }
+  75%       { transform: translateY(-15px) rotate(4deg) scale(1.05); }
+}
+
+.poop-bounce {
+  animation: poop-bounce 1.2s ease-in-out infinite;
+}

@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useNavigate } from 'react-router-dom'
 import { useLogs } from '../../hooks/useLogs'
 import { useAuth } from '../../hooks/useAuth'
 import { poopLogSchema } from '../../lib/validations'
@@ -21,6 +22,7 @@ import PoopCamera from './PoopCamera'
 export default function LogForm({ initialData, onSuccess }) {
   const { addLog, updateLog } = useLogs()
   const { user } = useAuth()
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [showCamera, setShowCamera] = useState(false)
   const [aiResult, setAiResult] = useState(null)
@@ -106,11 +108,40 @@ export default function LogForm({ initialData, onSuccess }) {
       if (initialData?.id) {
         await updateLog(initialData.id, payload)
         toast.success('¡Registro actualizado! ✏️')
+        onSuccess?.()
       } else {
         await addLog(payload)
-        toast.success('¡Caca registrada con éxito! 🎉')
+
+        // Obtener mensaje de celebración random
+        let celebrationMessage = '¡Caca registrada con éxito! 🎉'
+        let celebrationEmoji = '💩'
+
+        try {
+          const { data: rpcData } = await supabase.rpc('get_random_celebration')
+          if (rpcData && rpcData.length > 0) {
+            celebrationMessage = rpcData[0].message
+            celebrationEmoji = rpcData[0].emoji
+          } else {
+            const { data: queryData } = await supabase
+              .from('celebration_messages')
+              .select('message, emoji')
+              .eq('active', true)
+              .limit(50)
+            if (queryData && queryData.length > 0) {
+              const random = queryData[Math.floor(Math.random() * queryData.length)]
+              celebrationMessage = random.message
+              celebrationEmoji = random.emoji
+            }
+          }
+        } catch {
+          // Usar mensaje por defecto
+        }
+
+        navigate('/app/celebration', {
+          state: { message: celebrationMessage, emoji: celebrationEmoji },
+          replace: true,
+        })
       }
-      onSuccess?.()
     } catch (error) {
       toast.error(error.message || 'Error al guardar')
     } finally {
