@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth'
 import { Toaster } from 'sonner'
+import { Loader2 } from 'lucide-react'
 import AppLayout from './components/layout/AppLayout'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
@@ -16,7 +17,7 @@ function ProtectedRoute({ children }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream">
-        <div className="text-5xl animate-bounce">💩</div>
+        <Loader2 className="w-10 h-10 text-accent animate-spin" />
       </div>
     )
   }
@@ -28,7 +29,7 @@ function PublicRoute({ children }) {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream">
-        <div className="text-5xl animate-bounce">💩</div>
+        <Loader2 className="w-10 h-10 text-accent animate-spin" />
       </div>
     )
   }

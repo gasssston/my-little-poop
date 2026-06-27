@@ -1,13 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { LogOut } from 'lucide-react'
+import { LogOut, PlusCircle, ClipboardList, Users, User } from 'lucide-react'
 import { toast } from 'sonner'
 
 const navItems = [
-  { to: '/app/log', icon: '💩', label: 'Registrar' },
-  { to: '/app/history', icon: '📋', label: 'Historial' },
-  { to: '/app/friends', icon: '👥', label: 'Amigos' },
-  { to: '/app/account', icon: '👤', label: 'Mi cuenta' },
+  { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
+  { to: '/app/history', icon: ClipboardList, label: 'Historial' },
+  { to: '/app/friends', icon: Users, label: 'Amigos' },
+  { to: '/app/account', icon: User, label: 'Mi cuenta' },
 ]
 
 export default function Sidebar() {
@@ -44,7 +44,7 @@ export default function Sidebar() {
               }`
             }
           >
-            <span className="text-lg">{item.icon}</span>
+            <item.icon className="w-5 h-5" />
             {item.label}
           </NavLink>
         ))}

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { PenLine } from 'lucide-react'
 import LogForm from '../components/log/LogForm'
 
 export default function LogPage() {
@@ -7,8 +8,8 @@ export default function LogPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)]">
-          Registrar deposición 💩
+        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
+          <PenLine className="w-6 h-6 text-accent" /> Registrar deposición
         </h1>
         <p className="text-text-secondary text-sm mt-1">
           Cuéntanos los detalles de tu visita al trono

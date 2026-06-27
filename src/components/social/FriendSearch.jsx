@@ -26,7 +26,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
     setSending(userId)
     try {
       await sendRequest(userId)
-      toast.success('Solicitud enviada 💩')
+      toast.success('Solicitud enviada')
       setResults((prev) => prev.filter((u) => u.id !== userId))
     } catch {
       toast.error('Error al enviar solicitud')
@@ -95,7 +95,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
 
       {query.length >= 2 && !searching && results.length === 0 && (
         <p className="text-center text-text-secondary text-sm py-4">
-          No se encontraron usuarios 😕
+          No se encontraron usuarios
         </p>
       )}
     </div>

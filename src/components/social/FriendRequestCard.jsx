@@ -11,7 +11,7 @@ export default function FriendRequestCard({ request, onAccept, onReject }) {
     setLoading('accept')
     try {
       await onAccept(request.id)
-      toast.success('¡Amistad aceptada 🎉')
+      toast.success('¡Amistad aceptada!')
     } catch {
       toast.error('Error al aceptar')
     } finally {

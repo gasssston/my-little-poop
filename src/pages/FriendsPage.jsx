@@ -2,15 +2,16 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import { useFriends } from '../hooks/useFriends'
 import { useLeaderboard } from '../hooks/useLeaderboard'
+import { Users, Bell, Trophy } from 'lucide-react'
 import FriendSearch from '../components/social/FriendSearch'
 import FriendRequestCard from '../components/social/FriendRequestCard'
 import FriendList from '../components/social/FriendList'
 import Leaderboard from '../components/social/Leaderboard'
 
 const tabs = [
-  { id: 'friends', label: '👥 Mis amigos' },
-  { id: 'requests', label: '🔔 Solicitudes' },
-  { id: 'ranking', label: '🏆 Ranking' },
+  { id: 'friends', label: 'Mis amigos', icon: Users },
+  { id: 'requests', label: 'Solicitudes', icon: Bell },
+  { id: 'ranking', label: 'Ranking', icon: Trophy },
 ]
 
 export default function FriendsPage() {
@@ -40,11 +41,11 @@ export default function FriendsPage() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)]">
-          Amigos 👥
+        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
+          <Users className="w-6 h-6 text-accent" /> Amigos
         </h1>
         <p className="text-text-secondary text-sm mt-1">
-          Compite con tus amigas por la mejor racha 💩
+          Compite con tus amigas por la mejor racha
         </p>
       </div>
 
@@ -57,12 +58,13 @@ export default function FriendsPage() {
               setActiveTab(tab.id)
               if (tab.id === 'requests') requestNotificationPermission()
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs font-semibold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
               activeTab === tab.id
                 ? 'bg-accent text-white'
                 : 'bg-cream-card text-text-secondary hover:bg-border/50 border border-border/50'
             }`}
           >
+            <tab.icon className="w-3.5 h-3.5" />
             {tab.label}
             {tab.id === 'requests' && pending.length > 0 && (
               <span className="ml-1.5 bg-white/30 px-1.5 py-0.5 rounded-full text-[10px]">
@@ -79,7 +81,7 @@ export default function FriendsPage() {
           <FriendSearch searchUsers={searchUsers} sendRequest={sendRequest} />
           {loading ? (
             <div className="text-center py-8">
-              <div className="text-3xl animate-bounce">💩</div>
+              <Users className="w-8 h-8 text-accent animate-bounce mx-auto" />
             </div>
           ) : (
             <FriendList friends={friends} onRemove={removeFriend} />
@@ -126,7 +128,7 @@ export default function FriendsPage() {
 
           {pending.length === 0 && sent.length === 0 && (
             <div className="text-center py-8">
-              <span className="text-4xl block mb-3">🔔</span>
+              <Bell className="w-10 h-10 text-text-secondary/40 mx-auto mb-3" />
               <p className="text-text-secondary text-sm">Sin solicitudes pendientes</p>
             </div>
           )}
@@ -161,7 +163,7 @@ export default function FriendsPage() {
 
           {leaderboardLoading ? (
             <div className="text-center py-8">
-              <div className="text-3xl animate-bounce">🏆</div>
+              <Trophy className="w-8 h-8 text-accent animate-bounce mx-auto" />
             </div>
           ) : (
             <Leaderboard

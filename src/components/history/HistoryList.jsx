@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ClipboardList } from 'lucide-react'
 import { useLogs } from '../../hooks/useLogs'
 import StatsBar from './StatsBar'
 import LogCard from './LogCard'
@@ -27,7 +28,7 @@ export default function HistoryList() {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <div className="text-4xl animate-bounce">💩</div>
+        <ClipboardList className="w-10 h-10 text-accent animate-bounce" />
       </div>
     )
   }
@@ -49,8 +50,8 @@ export default function HistoryList() {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)]">
-          Historial 📋
+        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
+          <ClipboardList className="w-6 h-6 text-accent" /> Historial
         </h1>
       </div>
 
@@ -102,9 +103,9 @@ export default function HistoryList() {
 
       {filteredLogs.length === 0 ? (
         <div className="text-center py-16">
-          <span className="text-6xl block mb-4">💩</span>
+          <ClipboardList className="w-16 h-16 text-text-secondary/30 mx-auto mb-4" />
           <p className="text-text-secondary font-medium">No hay registros todavía</p>
-          <p className="text-text-secondary text-sm mt-1">¡Ve a registrar tu primera caca! 🌈</p>
+          <p className="text-text-secondary text-sm mt-1">¡Ve a registrar tu primera caca!</p>
         </div>
       ) : (
         <div className="space-y-3">

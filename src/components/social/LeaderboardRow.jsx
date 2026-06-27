@@ -1,5 +1,11 @@
+import { Trophy, Medal, Flame } from 'lucide-react'
+
 export default function LeaderboardRow({ player, position, isMe, period }) {
-  const medals = ['🥇', '🥈', '🥉']
+  const medals = [
+    <Trophy className="w-5 h-5 text-yellow-500" />,
+    <Medal className="w-5 h-5 text-gray-400" />,
+    <Medal className="w-5 h-5 text-amber-600" />,
+  ]
   const medal = medals[position - 1]
 
   return (
@@ -12,7 +18,7 @@ export default function LeaderboardRow({ player, position, isMe, period }) {
     >
       <div className="w-8 text-center">
         {medal ? (
-          <span className="text-xl">{medal}</span>
+          <span className="flex justify-center">{medal}</span>
         ) : (
           <span className="text-sm font-bold text-text-secondary">{position}</span>
         )}
@@ -34,7 +40,7 @@ export default function LeaderboardRow({ player, position, isMe, period }) {
 
       <div className="text-right">
         <p className="text-sm font-bold text-accent">{player.count} 💩</p>
-        <p className="text-[10px] text-text-secondary">🔥 {player.streak} días</p>
+        <p className="text-[10px] text-text-secondary flex items-center justify-end gap-0.5"><Flame className="w-3 h-3" /> {player.streak} días</p>
       </div>
     </div>
   )

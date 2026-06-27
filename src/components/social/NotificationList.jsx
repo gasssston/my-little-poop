@@ -1,3 +1,4 @@
+import { Bell } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -5,7 +6,7 @@ export default function NotificationList({ notifications, onMarkAsRead }) {
   if (notifications.length === 0) {
     return (
       <div className="text-center py-6">
-        <span className="text-3xl block mb-2">🔔</span>
+        <Bell className="w-8 h-8 text-text-secondary/40 mx-auto mb-2" />
         <p className="text-text-secondary text-xs">Sin notificaciones nuevas</p>
       </div>
     )

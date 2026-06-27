@@ -8,6 +8,7 @@ import { poopLogSchema } from '../../lib/validations'
 import { supabase } from '../../lib/supabase'
 import { bristolToFormType } from '../../lib/anthropic'
 import { toast } from 'sonner'
+import { Camera, CheckCircle, Droplets, Zap, Droplet, Wind, Calendar, FileText } from 'lucide-react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import TypeSelector from './TypeSelector'
@@ -189,7 +190,7 @@ export default function LogForm({ initialData, onSuccess }) {
       {/* Sección de cámara / Análisis IA */}
       <Card className="border-accent/20">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-text-primary">📸 Analizar mi caca con IA</h3>
+          <h3 className="text-sm font-bold text-text-primary flex items-center gap-1.5"><Camera className="w-4 h-4 text-accent" /> Analizar mi caca con IA</h3>
           <button
             type="button"
             onClick={() => setShowCamera(!showCamera)}
@@ -202,7 +203,7 @@ export default function LogForm({ initialData, onSuccess }) {
           <PoopCamera onAnalysisComplete={handleAnalysisComplete} />
         )}
         {!showCamera && aiResult && (
-          <p className="text-xs text-success font-medium">✅ Análisis completado — Tipo Bristol {aiResult.bristol_type}</p>
+          <p className="text-xs text-success font-medium flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Análisis completado — Tipo Bristol {aiResult.bristol_type}</p>
         )}
       </Card>
 
@@ -241,23 +242,23 @@ export default function LogForm({ initialData, onSuccess }) {
         <Toggle
           checked={formValues.had_blood}
           onChange={(v) => setValue('had_blood', v)}
-          label="🩸 ¿Hubo sangre?"
+          label={<span className="flex items-center gap-1.5"><Droplets className="w-3.5 h-3.5 text-error" /> ¿Hubo sangre?</span>}
           color="error"
         />
         <Toggle
           checked={formValues.had_straining}
           onChange={(v) => setValue('had_straining', v)}
-          label="💪 ¿Hubo mucho esfuerzo?"
+          label={<span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> ¿Hubo mucho esfuerzo?</span>}
         />
         <Toggle
           checked={formValues.had_splash}
           onChange={(v) => setValue('had_splash', v)}
-          label="💦 ¿Ha salpicado?"
+          label={<span className="flex items-center gap-1.5"><Droplet className="w-3.5 h-3.5 text-[#5BA8C8]" /> ¿Ha salpicado?</span>}
         />
         <Toggle
           checked={formValues.had_farts}
           onChange={(v) => setValue('had_farts', v)}
-          label="💨 ¿Ha venido con pedos?"
+          label={<span className="flex items-center gap-1.5"><Wind className="w-3.5 h-3.5" /> ¿Ha venido con pedos?</span>}
         />
       </Card>
 
@@ -269,8 +270,8 @@ export default function LogForm({ initialData, onSuccess }) {
       </Card>
 
       <Card>
-        <label className="block text-sm font-semibold text-text-primary mb-2">
-          📅 Fecha y hora
+        <label className="block text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
+          <Calendar className="w-4 h-4 text-accent" /> Fecha y hora
         </label>
         <input
           type="datetime-local"
@@ -284,8 +285,8 @@ export default function LogForm({ initialData, onSuccess }) {
       </Card>
 
       <Card>
-        <label className="block text-sm font-semibold text-text-primary mb-2">
-          📝 Notas
+        <label className="block text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
+          <FileText className="w-4 h-4 text-accent" /> Notas
         </label>
         <textarea
           {...register('notes')}

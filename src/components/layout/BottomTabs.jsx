@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
+import { PlusCircle, ClipboardList, Users, User } from 'lucide-react'
 
 const tabs = [
-  { to: '/app/log', icon: '💩', label: 'Registrar' },
-  { to: '/app/history', icon: '📋', label: 'Historial' },
-  { to: '/app/friends', icon: '👥', label: 'Amigos' },
-  { to: '/app/account', icon: '👤', label: 'Cuenta' },
+  { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
+  { to: '/app/history', icon: ClipboardList, label: 'Historial' },
+  { to: '/app/friends', icon: Users, label: 'Amigos' },
+  { to: '/app/account', icon: User, label: 'Cuenta' },
 ]
 
 export default function BottomTabs() {
@@ -23,7 +24,7 @@ export default function BottomTabs() {
               }`
             }
           >
-            <span className="text-xl">{tab.icon}</span>
+            <tab.icon className="w-5 h-5" />
             <span className="text-[10px] font-semibold">{tab.label}</span>
           </NavLink>
         ))}

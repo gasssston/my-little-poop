@@ -1,3 +1,4 @@
+import { Trophy } from 'lucide-react'
 import LeaderboardRow from './LeaderboardRow'
 import Podium from './Podium'
 
@@ -8,7 +9,7 @@ export default function Leaderboard({ data, myUserId, period }) {
   if (data.length === 0) {
     return (
       <div className="text-center py-8">
-        <span className="text-4xl block mb-3">🏆</span>
+        <Trophy className="w-10 h-10 text-text-secondary/40 mx-auto mb-3" />
         <p className="text-text-secondary text-sm">Sin datos de clasificación</p>
         <p className="text-text-secondary text-xs mt-1">Registra cacas para aparecer aquí</p>
       </div>

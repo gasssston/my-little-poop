@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { isToday, isYesterday, format } from 'date-fns'
 import { es } from 'date-fns/locale'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil, Trash2, Clock, AlertTriangle, Zap, Droplets, Wind, Microscope, FileText, CheckCircle, ThumbsUp, Stethoscope } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { getHealthStatusColor } from '../../lib/anthropic'
 import { toast } from 'sonner'
 import PhotoModal from './PhotoModal'
+
+const healthIcons = { CheckCircle, ThumbsUp, AlertTriangle, Stethoscope }
 
 const painFaces = ['😊', '😐', '😕', '😣', '😫', '😭']
 
@@ -39,7 +41,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
   const handleDelete = async () => {
     try {
       await onDelete(log.id)
-      toast.success('Registro eliminado 🗑️')
+      toast.success('Registro eliminado')
     } catch {
       toast.error('Error al eliminar')
     }
@@ -102,30 +104,30 @@ export default function LogCard({ log, onEdit, onDelete }) {
             title="Color"
           />
           {log.duration_minutes != null && (
-            <span className="text-text-secondary">⏱️ {log.duration_minutes} min</span>
+            <span className="text-text-secondary flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> {log.duration_minutes} min</span>
           )}
           <span className="text-text-secondary">{painFaces[log.pain_level] || '😊'}</span>
           <span className="text-text-secondary">
             💩 {log.satisfaction_level}/5
           </span>
           {log.had_blood && (
-            <span className="bg-error/10 text-error text-xs font-semibold px-2 py-0.5 rounded-full">
-              Sangre ⚠️
+            <span className="bg-error/10 text-error text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <AlertTriangle className="w-3 h-3" /> Sangre
             </span>
           )}
           {log.had_straining && (
-            <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-0.5 rounded-full">
-              Esfuerzo 💪
+            <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Zap className="w-3 h-3" /> Esfuerzo
             </span>
           )}
           {log.had_splash && (
-            <span className="bg-[#5BA8C8]/10 text-[#5BA8C8] text-xs font-semibold px-2 py-0.5 rounded-full">
-              Salpicó 💦
+            <span className="bg-[#5BA8C8]/10 text-[#5BA8C8] text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Droplets className="w-3 h-3" /> Salpicó
             </span>
           )}
           {log.had_farts && (
-            <span className="bg-accent-hover/10 text-accent-hover text-xs font-semibold px-2 py-0.5 rounded-full">
-              Pedos 💨
+            <span className="bg-accent-hover/10 text-accent-hover text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+              <Wind className="w-3 h-3" /> Pedos
             </span>
           )}
         </div>
@@ -133,14 +135,17 @@ export default function LogCard({ log, onEdit, onDelete }) {
         {/* Badges de IA */}
         {(log.ai_bristol_type || log.ai_bristol_label) && (
           <div className="flex flex-wrap gap-2 mt-3">
-            <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-1 rounded-full">
-              🔬 Bristol {log.ai_bristol_type}
+            <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1">
+              <Microscope className="w-3 h-3" /> Bristol {log.ai_bristol_type}
             </span>
-            {statusStyle && (
-              <span className={`${statusStyle.bg} ${statusStyle.text} text-xs font-semibold px-2 py-1 rounded-full`}>
-                {statusStyle.emoji} {JSON.parse(log.ai_analysis_raw || '{}').health_status}
-              </span>
-            )}
+            {statusStyle && (() => {
+              const Icon = healthIcons[statusStyle.icon]
+              return (
+                <span className={`${statusStyle.bg} ${statusStyle.text} text-xs font-semibold px-2 py-1 rounded-full flex items-center gap-1`}>
+                  {Icon && <Icon className="w-3 h-3" />} {JSON.parse(log.ai_analysis_raw || '{}').health_status}
+                </span>
+              )
+            })()}
           </div>
         )}
 
@@ -155,7 +160,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
             </button>
           )}
           {log.notes && (
-            <p className="text-xs text-text-secondary italic">📝 {log.notes}</p>
+            <p className="text-xs text-text-secondary italic flex items-center gap-1"><FileText className="w-3 h-3" /> {log.notes}</p>
           )}
         </div>
       </div>

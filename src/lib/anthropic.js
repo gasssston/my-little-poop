@@ -139,10 +139,10 @@ export function bristolToFormType(bristolType) {
  */
 export function getHealthStatusColor(status) {
   const map = {
-    'óptimo': { bg: 'bg-success/10', text: 'text-success', emoji: '✅' },
-    'aceptable': { bg: 'bg-accent-hover/10', text: 'text-accent-hover', emoji: '👍' },
-    'atención recomendada': { bg: 'bg-[#E87832]/10', text: 'text-[#E87832]', emoji: '⚠️' },
-    'consulta médica recomendada': { bg: 'bg-error/10', text: 'text-error', emoji: '🩺' },
+    'óptimo': { bg: 'bg-success/10', text: 'text-success', icon: 'CheckCircle' },
+    'aceptable': { bg: 'bg-accent-hover/10', text: 'text-accent-hover', icon: 'ThumbsUp' },
+    'atención recomendada': { bg: 'bg-[#E87832]/10', text: 'text-[#E87832]', icon: 'AlertTriangle' },
+    'consulta médica recomendada': { bg: 'bg-error/10', text: 'text-error', icon: 'Stethoscope' },
   }
   return map[status] || map['aceptable']
 }

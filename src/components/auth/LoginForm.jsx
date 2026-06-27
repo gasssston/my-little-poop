@@ -6,7 +6,7 @@ import { loginSchema } from '../../lib/validations'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../ui/Button'
-import { LogIn, X } from 'lucide-react'
+import { LogIn, X, Key } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
 export default function LoginForm() {
@@ -42,7 +42,7 @@ export default function LoginForm() {
         redirectTo: `${window.location.origin}/login`,
       })
       if (error) throw error
-      toast.success('Email de recuperación enviado 📧')
+      toast.success('Email de recuperación enviado')
       setShowReset(false)
       setResetEmail('')
     } catch (error) {
@@ -105,8 +105,8 @@ export default function LoginForm() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-cream-card rounded-2xl border border-border p-6 w-full max-w-md shadow-lg">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-bold text-text-primary font-[family-name:var(--font-display)]">
-                Restaurar contraseña 🔑
+              <h3 className="text-lg font-bold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-1.5">
+                <Key className="w-5 h-5 text-accent" /> Restaurar contraseña
               </h3>
               <button
                 onClick={() => setShowReset(false)}

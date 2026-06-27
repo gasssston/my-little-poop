@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Trash2, Loader2 } from 'lucide-react'
+import { Trash2, Loader2, Flame } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function FriendCard({ friend, onRemove }) {
@@ -31,7 +31,7 @@ export default function FriendCard({ friend, onRemove }) {
         </div>
         <div>
           <p className="text-sm font-semibold text-text-primary">{friend.peer?.name || 'Desconocido'}</p>
-          <p className="text-xs text-text-secondary">🔥 {friend.streak || 0} días de racha</p>
+          <p className="text-xs text-text-secondary flex items-center gap-1"><Flame className="w-3 h-3" /> {friend.streak || 0} días de racha</p>
         </div>
       </div>
       <div>
