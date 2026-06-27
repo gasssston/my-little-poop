@@ -113,14 +113,22 @@ export default function LogForm({ initialData, onSuccess }) {
         await addLog(payload)
 
         // Obtener mensaje de celebración random
-        let celebrationMessage = '¡Caca registrada con éxito! 🎉'
-        let celebrationEmoji = '💩'
+        const fallbackMessages = [
+          { message: '¡ENHORABUENA CAMPEÓN!! Has hecho una cacota enorme 💪', emoji: '💩' },
+          { message: '¡Qué pedazo de caca! Te habrás quedado a gusto 😌', emoji: '🏆' },
+          { message: 'Récord personal! Sigue así 🌟', emoji: '🔥' },
+          { message: 'Tu intestino te aplaude 👏', emoji: '🌈' },
+          { message: 'Eso era ENORME! Mereces una medalla 🥇', emoji: '🎉' },
+          { message: 'Caca perfecta detectada. 10/10 👌', emoji: '😎' },
+          { message: '¡Bomba soltada! El baño tiembla 🌋', emoji: '💥' },
+          { message: 'Tu flora intestinal está de fiesta 🎊', emoji: '✨' },
+        ]
+        let celebration = fallbackMessages[Math.floor(Math.random() * fallbackMessages.length)]
 
         try {
           const { data: rpcData } = await supabase.rpc('get_random_celebration')
           if (rpcData && rpcData.length > 0) {
-            celebrationMessage = rpcData[0].message
-            celebrationEmoji = rpcData[0].emoji
+            celebration = { message: rpcData[0].message, emoji: rpcData[0].emoji }
           } else {
             const { data: queryData } = await supabase
               .from('celebration_messages')
@@ -128,17 +136,15 @@ export default function LogForm({ initialData, onSuccess }) {
               .eq('active', true)
               .limit(50)
             if (queryData && queryData.length > 0) {
-              const random = queryData[Math.floor(Math.random() * queryData.length)]
-              celebrationMessage = random.message
-              celebrationEmoji = random.emoji
+              celebration = queryData[Math.floor(Math.random() * queryData.length)]
             }
           }
         } catch {
-          // Usar mensaje por defecto
+          // Usar mensaje fallback
         }
 
         navigate('/app/celebration', {
-          state: { message: celebrationMessage, emoji: celebrationEmoji },
+          state: { message: celebration.message, emoji: celebration.emoji },
           replace: true,
         })
       }

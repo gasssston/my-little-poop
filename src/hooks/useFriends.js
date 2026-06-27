@@ -112,12 +112,7 @@ export function useFriends() {
 
   const searchUsers = async (query) => {
     if (!query || query.length < 2) return []
-    const { data } = await supabase
-      .from('profiles')
-      .select('*')
-      .or(`name.ilike.%${query}%,email.ilike.%${query}%`)
-      .neq('id', user.id)
-      .limit(10)
+    const { data } = await supabase.rpc('search_users', { query })
 
     // Excluir amigos y solicitudes pendientes
     const excludeIds = new Set([

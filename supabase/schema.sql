@@ -8,6 +8,8 @@
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
+  email TEXT,
+  search_name TEXT,
   avatar_url TEXT,
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -83,8 +85,16 @@ CREATE POLICY "Users can manage own photos" ON storage.objects
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.profiles (id, name)
-  VALUES (NEW.id, COALESCE(NEW.raw_user_meta_data->>'name', 'Usuario'));
+  INSERT INTO public.profiles (id, name, email, search_name)
+  VALUES (
+    NEW.id,
+    COALESCE(NEW.raw_user_meta_data->>'name', 'Usuario'),
+    NEW.email,
+    lower(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+      COALESCE(NEW.raw_user_meta_data->>'name', 'Usuario'),
+      'á','a'), 'é','e'), 'í','i'), 'ó','o'), 'ú','u'),
+      'Á','A'), 'É','E'), 'Í','I'), 'Ó','O'), 'Ú','U'))
+  );
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -140,6 +150,24 @@ CREATE POLICY "Allow insert notifications" ON notifications
 -- ============================================================
 -- FUNCIONES Y VIEWS
 -- ============================================================
+
+-- Función de búsqueda por nombre y email (sin tildes)
+CREATE OR REPLACE FUNCTION search_users(query TEXT)
+RETURNS TABLE(id UUID, name TEXT, email TEXT, avatar_url TEXT) AS $$
+  DECLARE
+    q TEXT := lower(replace(replace(replace(replace(replace(replace(replace(replace(replace(replace(
+      query,
+      'á','a'), 'é','e'), 'í','i'), 'ó','o'), 'ú','u'),
+      'Á','A'), 'É','E'), 'Í','I'), 'Ó','O'), 'Ú','U'));
+  BEGIN
+    RETURN QUERY
+    SELECT p.id, p.name, p.email, p.avatar_url
+    FROM profiles p
+    WHERE p.search_name ILIKE '%' || q || '%'
+       OR lower(p.email) ILIKE '%' || lower(query) || '%'
+    LIMIT 10;
+  END;
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_user_streak(uid UUID)
 RETURNS INT AS $$

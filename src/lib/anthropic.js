@@ -38,57 +38,78 @@ Si la imagen no muestra claramente heces o no puedes analizarla, devuelve: {"err
 
 /**
  * Analiza una imagen de heces usando OpenRouter (con visión)
+ * Intenta con el primer modelo y si falla, usa un fallback
  */
+const MODELS = [
+  'google/gemma-4-31b-it:free',
+  'google/gemini-2.0-flash-001:free',
+  'meta-llama/llama-4-scout:free',
+]
+
 export async function analyzePoopImage(base64Image, mimeType) {
   const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY
   if (!apiKey) {
     throw new Error('Falta VITE_OPENROUTER_API_KEY en .env.local')
   }
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${apiKey}`,
-      'HTTP-Referer': window.location.origin,
-      'X-Title': 'My Little Poop',
-    },
-    body: JSON.stringify({
-      model: 'google/gemma-4-31b-it:free',
-      messages: [
-        {
-          role: 'user',
-          content: [
-            { type: 'text', text: SYSTEM_PROMPT },
+  let lastError = null
+
+  for (const model of MODELS) {
+    try {
+      const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`,
+          'HTTP-Referer': window.location.origin,
+          'X-Title': 'My Little Poop',
+        },
+        body: JSON.stringify({
+          model,
+          messages: [
             {
-              type: 'image_url',
-              image_url: { url: `data:${mimeType};base64,${base64Image}` },
+              role: 'user',
+              content: [
+                { type: 'text', text: SYSTEM_PROMPT },
+                {
+                  type: 'image_url',
+                  image_url: { url: `data:${mimeType};base64,${base64Image}` },
+                },
+              ],
             },
           ],
-        },
-      ],
-      max_tokens: 1024,
-    }),
-  })
+          max_tokens: 1024,
+        }),
+      })
 
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}))
-    throw new Error(errorData.error?.message || `Error de la API: ${response.status}`)
-  }
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        lastError = new Error(errorData.error?.message || `Error de la API: ${response.status}`)
+        // Si es rate limit, probar el siguiente modelo
+        if (response.status === 429) continue
+        throw lastError
+      }
 
-  const data = await response.json()
-  const text = data.choices[0].message.content
+      const data = await response.json()
+      const text = data.choices[0].message.content
 
-  try {
-    return JSON.parse(text)
-  } catch {
-    // Intentar extraer JSON del texto si viene envuelto en markdown
-    const jsonMatch = text.match(/\{[\s\S]*\}/)
-    if (jsonMatch) {
-      return JSON.parse(jsonMatch[0])
+      try {
+        return JSON.parse(text)
+      } catch {
+        const jsonMatch = text.match(/\{[\s\S]*\}/)
+        if (jsonMatch) {
+          return JSON.parse(jsonMatch[0])
+        }
+        throw new Error('No se pudo parsear la respuesta de la IA')
+      }
+    } catch (err) {
+      lastError = err
+      if (err.message?.includes('rate') || err.message?.includes('429')) continue
+      throw err
     }
-    throw new Error('No se pudo parsear la respuesta de la IA')
   }
+
+  throw lastError || new Error('Todos los modelos están temporalmente no disponibles. Inténtalo de nuevo en unos segundos.')
 }
 
 /**
