@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
@@ -49,7 +49,7 @@ export default function LogForm({ initialData, onSuccess }) {
   const { register, handleSubmit, watch, setValue, formState: { errors } } = useForm({
     resolver: zodResolver(poopLogSchema),
     defaultValues: {
-      type: initialData?.type || '',
+      type: initialData?.type || 'Blanda normal',
       color: initialData?.color || '#C8853A',
       duration_minutes: initialData?.duration_minutes || 5,
       pain_level: initialData?.pain_level ?? 0,
@@ -67,6 +67,12 @@ export default function LogForm({ initialData, onSuccess }) {
   })
 
   const formValues = watch()
+
+  useEffect(() => {
+    if (!initialData) {
+      setValue('type', 'Blanda normal')
+    }
+  }, [])
 
   const handleAnalysisComplete = (result) => {
     setAiResult(result)

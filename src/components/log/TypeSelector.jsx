@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const types = [
   { emoji: '💧', name: 'Líquida / Diarrea' },
@@ -13,15 +13,31 @@ const types = [
 const MAX_CHARS = 30
 
 export default function TypeSelector({ value, onChange }) {
+  const [selected, setSelected] = useState(() => value || 'Blanda normal')
   const [customValue, setCustomValue] = useState('')
 
-  const isOtro = types.find((t) => t.name === 'Otro')?.name === value || (value && !types.some((t) => t.name === value))
+  useEffect(() => {
+    onChange(selected)
+  }, [])
+
+  useEffect(() => {
+    if (value && value !== selected) {
+      setSelected(value)
+    }
+  }, [value])
+
+  const isOtro = selected === 'Otro' || (selected && !types.some((t) => t.name === selected))
+
+  const handleSelect = (name) => {
+    setSelected(name)
+    onChange(name)
+  }
 
   const handleOtroClick = () => {
     if (customValue) {
-      onChange(customValue)
+      handleSelect(customValue)
     } else {
-      onChange('Otro')
+      handleSelect('Otro')
     }
   }
 
@@ -29,9 +45,9 @@ export default function TypeSelector({ value, onChange }) {
     const text = e.target.value.slice(0, MAX_CHARS)
     setCustomValue(text)
     if (text) {
-      onChange(text)
+      handleSelect(text)
     } else {
-      onChange('Otro')
+      handleSelect('Otro')
     }
   }
 
@@ -50,11 +66,11 @@ export default function TypeSelector({ value, onChange }) {
                 handleOtroClick()
               } else {
                 setCustomValue('')
-                onChange(type.name)
+                handleSelect(type.name)
               }
             }}
             className={`flex flex-col items-center gap-1 p-3 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
-              value === type.name || (type.name === 'Otro' && isOtro)
+              selected === type.name || (type.name === 'Otro' && isOtro)
                 ? 'border-accent bg-accent/10 scale-[1.02]'
                 : 'border-border/50 bg-white/30 hover:border-border hover:bg-white/50'
             }`}
@@ -67,7 +83,6 @@ export default function TypeSelector({ value, onChange }) {
         ))}
       </div>
 
-      {/* Campo de texto personalizado cuando "Otro" está seleccionado */}
       {isOtro && (
         <div className="mt-3">
           <div className="relative">
