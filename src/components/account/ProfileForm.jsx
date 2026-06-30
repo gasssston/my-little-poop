@@ -8,9 +8,11 @@ import { toast } from 'sonner'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
 import AvatarUpload from './AvatarUpload'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function ProfileForm() {
   const { profile, updateProfile } = useProfile()
+  const { t } = useLanguage()
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
 
@@ -26,9 +28,9 @@ export default function ProfileForm() {
     setLoading(true)
     try {
       await updateProfile({ name: data.name })
-      toast.success('Perfil actualizado ✨')
+      toast.success(t('common.success'))
     } catch (error) {
-      toast.error(error.message || 'Error al actualizar')
+      toast.error(error.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -37,12 +39,12 @@ export default function ProfileForm() {
   return (
     <Card>
       <h2 className="text-lg font-bold text-text-primary font-[family-name:var(--font-display)] mb-4">
-        Datos personales
+        {t('account.profileTitle')}
       </h2>
       <AvatarUpload />
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mt-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Nombre</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('common.name')}</label>
           <input
             type="text"
             {...register('name')}
@@ -51,7 +53,7 @@ export default function ProfileForm() {
           {errors.name && <p className="text-error text-xs mt-1">{errors.name.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('common.email')}</label>
           <input
             type="email"
             {...register('email')}
@@ -60,7 +62,7 @@ export default function ProfileForm() {
           />
         </div>
         <Button type="submit" loading={loading}>
-          Guardar cambios
+          {t('common.saveChanges')}
         </Button>
       </form>
     </Card>

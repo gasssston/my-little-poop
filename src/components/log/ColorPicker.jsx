@@ -1,22 +1,24 @@
-import { useState } from 'react'
-
-const presetColors = [
-  { hex: '#F5E642', name: 'Amarillo claro' },
-  { hex: '#C8853A', name: 'Marrón claro' },
-  { hex: '#6B3A1F', name: 'Marrón oscuro' },
-  { hex: '#5C9E4A', name: 'Verde' },
-  { hex: '#1A1A1A', name: 'Negro' },
-  { hex: '#CC3333', name: 'Rojo' },
-  { hex: '#E87832', name: 'Naranja' },
-]
+import { useState, useMemo } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function ColorPicker({ value, onChange }) {
+  const { t } = useLanguage()
   const [showCustom, setShowCustom] = useState(false)
+
+  const presetColors = useMemo(() => [
+    { hex: '#F5E642', name: t('log.colors.lightYellow') },
+    { hex: '#C8853A', name: t('log.colors.lightBrown') },
+    { hex: '#6B3A1F', name: t('log.colors.darkBrown') },
+    { hex: '#5C9E4A', name: t('log.colors.green') },
+    { hex: '#1A1A1A', name: t('log.colors.black') },
+    { hex: '#CC3333', name: t('log.colors.red') },
+    { hex: '#E87832', name: t('log.colors.orange') },
+  ], [t])
 
   return (
     <div>
       <label className="block text-sm font-semibold text-text-primary mb-3">
-        Color
+        {t('log.colorLabel')}
       </label>
       <div className="flex flex-wrap gap-3 items-center">
         {presetColors.map((color) => (
@@ -39,7 +41,7 @@ export default function ColorPicker({ value, onChange }) {
           className={`w-10 h-10 rounded-full border-2 border-dashed transition-all duration-200 cursor-pointer flex items-center justify-center text-xs ${
             showCustom ? 'border-accent bg-accent/10' : 'border-border text-text-secondary hover:border-accent'
           }`}
-          title="Color personalizado"
+          title={t('log.colorCustom')}
         >
           ✏️
         </button>

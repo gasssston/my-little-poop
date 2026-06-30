@@ -1,8 +1,12 @@
+import { useLanguage } from '../../hooks/useLanguage'
+
 export default function SatisfactionStars({ value, onChange }) {
+  const { t } = useLanguage()
+
   return (
     <div>
       <label className="block text-sm font-semibold text-text-primary mb-3">
-        Satisfacción general
+        {t('log.satisfaction')}
       </label>
       <div className="flex gap-2">
         {[1, 2, 3, 4, 5].map((star) => (

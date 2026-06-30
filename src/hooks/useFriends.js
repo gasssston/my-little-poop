@@ -1,6 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
 import { supabase } from '../lib/supabase'
 import { useAuth } from './useAuth'
+import esT from '../lib/i18n/es.json'
+
+const t = (key) => esT[key] || key
 
 function stripAccents(str) {
   return str
@@ -189,7 +192,7 @@ export function useFriends() {
       user_id: userId,
       actor_id: user.id,
       type: 'friend_request',
-      message: `${myProfile?.name || 'Alguien'} quiere ser tu amiga 💩`,
+      message: t('notification.friendRequest').replace('{name}', myProfile?.name || 'Alguien'),
       metadata: { friendship_requester: user.id },
     }])
 
@@ -216,7 +219,7 @@ export function useFriends() {
         user_id: friendship.requester_id,
         actor_id: user.id,
         type: 'friend_accepted',
-        message: `${myProfile?.name || 'Alguien'} aceptó tu solicitud de amistad 🎉`,
+        message: t('notification.friendAccepted').replace('{name}', myProfile?.name || 'Alguien'),
         metadata: { friendship_id: friendshipId },
       }])
     }
@@ -253,7 +256,7 @@ export function useFriends() {
       user_id: friendId,
       actor_id: user.id,
       type: 'nudge',
-      message: `${myProfile?.name || 'Alguien'} te ha dado un toque 👋💩`,
+      message: t('notification.nudge').replace('{name}', myProfile?.name || 'Alguien'),
       metadata: {},
     }])
 

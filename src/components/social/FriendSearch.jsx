@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import { Search, UserPlus, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function FriendSearch({ searchUsers, sendRequest }) {
+  const { t } = useLanguage()
   const [query, setQuery] = useState('')
   const [results, setResults] = useState([])
   const [searching, setSearching] = useState(false)
@@ -16,7 +18,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
       const users = await searchUsers(query)
       setResults(users)
     } catch {
-      toast.error('Error al buscar usuarios')
+      toast.error(t('friends.searchError'))
     } finally {
       setSearching(false)
     }
@@ -26,10 +28,10 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
     setSending(userId)
     try {
       await sendRequest(userId)
-      toast.success('Solicitud enviada')
+      toast.success(t('friends.requestSent'))
       setResults((prev) => prev.filter((u) => u.id !== userId))
     } catch {
-      toast.error('Error al enviar solicitud')
+      toast.error(t('friends.requestError'))
     } finally {
       setSending(null)
     }
@@ -44,7 +46,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Buscar por nombre o email..."
+            placeholder={t('friends.searchPlaceholder')}
             className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all text-sm"
           />
         </div>
@@ -53,7 +55,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
           disabled={query.length < 2 || searching}
           className="px-4 py-3 rounded-xl bg-accent text-white font-semibold hover:bg-accent-hover transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm"
         >
-          {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Buscar'}
+          {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : t('friends.searchButton')}
         </button>
       </form>
 
@@ -86,7 +88,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
                 ) : (
                   <UserPlus className="w-3 h-3" />
                 )}
-                Agregar
+                {t('friends.addFriend')}
               </button>
             </div>
           ))}
@@ -95,7 +97,7 @@ export default function FriendSearch({ searchUsers, sendRequest }) {
 
       {query.length >= 2 && !searching && results.length === 0 && (
         <p className="text-center text-text-secondary text-sm py-4">
-          No se encontraron usuarios
+          {t('friends.noResults')}
         </p>
       )}
     </div>

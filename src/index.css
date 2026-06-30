@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-cream: #FDF6EC;
   --color-cream-card: #FAF0DF;
@@ -12,6 +14,16 @@
   --color-border: #E5D4BC;
   --font-display: 'Nunito', sans-serif;
   --font-body: 'Inter', sans-serif;
+}
+
+.dark {
+  --color-cream: #1a1a2e;
+  --color-cream-card: #16213e;
+  --color-accent: #e8a95c;
+  --color-accent-hover: #f0b86e;
+  --color-text-primary: #e8e0d8;
+  --color-text-secondary: #a09080;
+  --color-border: #2a2a4e;
 }
 
 body {

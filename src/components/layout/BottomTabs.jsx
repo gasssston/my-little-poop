@@ -1,14 +1,17 @@
 import { NavLink } from 'react-router-dom'
 import { PlusCircle, ClipboardList, Users, User } from 'lucide-react'
-
-const tabs = [
-  { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
-  { to: '/app/history', icon: ClipboardList, label: 'Historial' },
-  { to: '/app/friends', icon: Users, label: 'Amigos' },
-  { to: '/app/account', icon: User, label: 'Cuenta' },
-]
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function BottomTabs() {
+  const { t } = useLanguage()
+
+  const tabs = [
+    { to: '/app/log', icon: PlusCircle, label: t('nav.register') },
+    { to: '/app/history', icon: ClipboardList, label: t('nav.history') },
+    { to: '/app/friends', icon: Users, label: t('nav.friends') },
+    { to: '/app/account', icon: User, label: t('nav.accountShort') },
+  ]
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-cream-card border-t border-border z-40 safe-area-bottom">
       <div className="flex justify-around items-center h-16">

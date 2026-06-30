@@ -8,9 +8,11 @@ import { toast } from 'sonner'
 import Button from '../ui/Button'
 import { LogIn, X, Key, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function LoginForm() {
   const { signIn } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -28,7 +30,7 @@ export default function LoginForm() {
       await signIn(data.email, data.password)
       navigate('/app/log')
     } catch (error) {
-      toast.error(error.message || 'Error al iniciar sesión')
+      toast.error(error.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -43,11 +45,11 @@ export default function LoginForm() {
         redirectTo: `${window.location.origin}/login`,
       })
       if (error) throw error
-      toast.success('Email de recuperación enviado')
+      toast.success(t('login.recoverySent'))
       setShowReset(false)
       setResetEmail('')
     } catch (error) {
-      toast.error(error.message || 'Error al enviar email')
+      toast.error(error.message || t('common.error'))
     } finally {
       setResetLoading(false)
     }
@@ -57,7 +59,7 @@ export default function LoginForm() {
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Email</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('common.email')}</label>
           <input
             type="email"
             {...register('email')}
@@ -68,7 +70,7 @@ export default function LoginForm() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Contraseña</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('common.password')}</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -93,30 +95,29 @@ export default function LoginForm() {
             onClick={() => setShowReset(true)}
             className="text-xs text-accent font-semibold hover:text-accent-hover transition-colors cursor-pointer"
           >
-            ¿Olvidaste tu contraseña?
+            {t('login.forgotPassword')}
           </button>
         </div>
 
         <Button type="submit" loading={loading} className="w-full">
           <LogIn className="w-4 h-4" />
-          Iniciar sesión
+          {t('login.title')}
         </Button>
 
         <p className="text-center text-sm text-text-secondary">
-          ¿No tienes cuenta?{' '}
+          {t('login.noAccount')}{' '}
           <Link to="/register" className="text-accent font-semibold hover:text-accent-hover transition-colors">
-            Regístrate aquí
+            {t('login.registerLink')}
           </Link>
         </p>
       </form>
 
-      {/* Modal de restaurar contraseña */}
       {showReset && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="bg-cream-card rounded-2xl border border-border p-6 w-full max-w-md shadow-lg">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-1.5">
-                <Key className="w-5 h-5 text-accent" /> Restaurar contraseña
+                <Key className="w-5 h-5 text-accent" /> {t('login.resetPassword')}
               </h3>
               <button
                 onClick={() => setShowReset(false)}
@@ -126,7 +127,7 @@ export default function LoginForm() {
               </button>
             </div>
             <p className="text-sm text-text-secondary mb-4">
-              Te enviaremos un email con un enlace para crear una nueva contraseña.
+              {t('login.resetHint')}
             </p>
             <form onSubmit={handleResetPassword} className="space-y-4">
               <input
@@ -138,7 +139,7 @@ export default function LoginForm() {
                 required
               />
               <Button type="submit" loading={resetLoading} className="w-full">
-                Enviar email de recuperación
+                {t('login.sendRecovery')}
               </Button>
             </form>
           </div>

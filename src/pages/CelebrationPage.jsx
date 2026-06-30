@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useLanguage } from '../hooks/useLanguage'
 
 export default function CelebrationPage() {
+  const { t } = useLanguage()
   const navigate = useNavigate()
   const location = useLocation()
   const [progress, setProgress] = useState(100)
@@ -73,7 +75,7 @@ export default function CelebrationPage() {
 
       {/* Indicador */}
       <p className="text-sm text-text-secondary animate-pulse">
-        Toca para continuar →
+        {t('celebration.continue')}
       </p>
     </div>
   )

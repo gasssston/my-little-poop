@@ -1,4 +1,7 @@
+import { useLanguage } from '../../hooks/useLanguage'
+
 export default function Podium({ players, myUserId }) {
+  const { t } = useLanguage()
   // Orden: 2do, 1ro, 3ro
   const order = [1, 0, 2]
   const heights = ['h-24', 'h-28', 'h-20']
@@ -24,7 +27,7 @@ export default function Podium({ players, myUserId }) {
               )}
             </div>
             <p className={`text-xs font-semibold text-center truncate max-w-[64px] ${isMe ? 'text-accent' : 'text-text-primary'}`}>
-              {isMe ? 'Tú' : player.name?.split(' ')[0]}
+              {isMe ? t('leaderboard.you') : player.name?.split(' ')[0]}
             </p>
             <div
               className={`${heights[pos]} w-16 rounded-t-xl flex items-center justify-center text-2xl mt-1`}

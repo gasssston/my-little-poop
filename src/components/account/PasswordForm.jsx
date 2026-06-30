@@ -7,9 +7,11 @@ import { toast } from 'sonner'
 import { Eye, EyeOff } from 'lucide-react'
 import Button from '../ui/Button'
 import Card from '../ui/Card'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function PasswordForm() {
   const { updatePassword } = useAuth()
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
@@ -22,10 +24,10 @@ export default function PasswordForm() {
     setLoading(true)
     try {
       await updatePassword(data.newPassword)
-      toast.success('Contraseña actualizada 🔒')
+      toast.success(t('account.passwordUpdated'))
       reset()
     } catch (error) {
-      toast.error(error.message || 'Error al actualizar contraseña')
+      toast.error(error.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -34,11 +36,11 @@ export default function PasswordForm() {
   return (
     <Card>
       <h2 className="text-lg font-bold text-text-primary font-[family-name:var(--font-display)] mb-4">
-        Cambiar contraseña
+        {t('account.changePassword')}
       </h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Nueva contraseña</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('account.newPassword')}</label>
           <div className="relative">
             <input
               type={showNewPassword ? 'text' : 'password'}
@@ -57,7 +59,7 @@ export default function PasswordForm() {
           {errors.newPassword && <p className="text-error text-xs mt-1">{errors.newPassword.message}</p>}
         </div>
         <div>
-          <label className="block text-sm font-medium text-text-primary mb-1">Confirmar contraseña</label>
+          <label className="block text-sm font-medium text-text-primary mb-1">{t('account.confirmPassword')}</label>
           <div className="relative">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
@@ -76,7 +78,7 @@ export default function PasswordForm() {
           {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
         </div>
         <Button type="submit" loading={loading}>
-          Actualizar contraseña
+          {t('account.updatePassword')}
         </Button>
       </form>
     </Card>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../hooks/useAuth'
+import { useLanguage } from '../hooks/useLanguage'
 import { useFriends } from '../hooks/useFriends'
 import { useLeaderboard } from '../hooks/useLeaderboard'
 import { Users, Bell, Trophy } from 'lucide-react'
@@ -8,14 +9,9 @@ import FriendRequestCard from '../components/social/FriendRequestCard'
 import FriendList from '../components/social/FriendList'
 import Leaderboard from '../components/social/Leaderboard'
 
-const tabs = [
-  { id: 'friends', label: 'Mis amigos', icon: Users },
-  { id: 'requests', label: 'Solicitudes', icon: Bell },
-  { id: 'ranking', label: 'Ranking', icon: Trophy },
-]
-
 export default function FriendsPage() {
   const { user } = useAuth()
+  const { t } = useLanguage()
   const { friends, pending, sent, searchUsers, sendRequest, acceptRequest, rejectRequest, removeFriend, nudgeFriend, loading } = useFriends()
   const { weekly, monthly, myPosition, loading: leaderboardLoading } = useLeaderboard(
     friends.map((f) => f.peer?.id).filter(Boolean)
@@ -23,10 +19,14 @@ export default function FriendsPage() {
   const [activeTab, setActiveTab] = useState('friends')
   const [period, setPeriod] = useState('weekly')
 
-  // Pedir permiso de notificaciones
+  const tabs = [
+    { id: 'friends', label: t('friends.tabFriends'), icon: Users },
+    { id: 'requests', label: t('friends.tabRequests'), icon: Bell },
+    { id: 'ranking', label: t('friends.tabRanking'), icon: Trophy },
+  ]
+
   useEffect(() => {
     if ('Notification' in window && Notification.permission === 'default') {
-      // Se pedirá cuando el usuario interactúe
     }
   }, [])
 
@@ -42,14 +42,13 @@ export default function FriendsPage() {
     <div>
       <div className="mb-6">
         <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <Users className="w-6 h-6 text-accent" /> Amigos
+          <Users className="w-6 h-6 text-accent" /> {t('friends.title')}
         </h1>
         <p className="text-text-secondary text-sm mt-1">
-          Compite con tus amigas por la mejor racha
+          {t('friends.subtitle')}
         </p>
       </div>
 
-      {/* Tabs */}
       <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
         {tabs.map((tab) => (
           <button
@@ -75,7 +74,6 @@ export default function FriendsPage() {
         ))}
       </div>
 
-      {/* Contenido */}
       {activeTab === 'friends' && (
         <div className="space-y-4">
           <FriendSearch searchUsers={searchUsers} sendRequest={sendRequest} />
@@ -93,7 +91,7 @@ export default function FriendsPage() {
         <div className="space-y-4">
           {pending.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-text-primary mb-2">Pendientes</h3>
+              <h3 className="text-sm font-semibold text-text-primary mb-2">{t('friends.pendingTitle')}</h3>
               <div className="space-y-2">
                 {pending.map((req) => (
                   <FriendRequestCard
@@ -109,7 +107,7 @@ export default function FriendsPage() {
 
           {sent.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold text-text-primary mb-2">Enviadas</h3>
+              <h3 className="text-sm font-semibold text-text-primary mb-2">{t('friends.sentTitle')}</h3>
               <div className="space-y-2">
                 {sent.map((req) => (
                   <div key={req.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/30 border border-border/50 opacity-60">
@@ -117,8 +115,8 @@ export default function FriendsPage() {
                       {req.peer?.name?.charAt(0)?.toUpperCase() || '?'}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-text-primary">{req.peer?.name || 'Desconocido'}</p>
-                      <p className="text-xs text-text-secondary">Solicitud pendiente</p>
+                      <p className="text-sm font-semibold text-text-primary">{req.peer?.name || t('friends.unknown')}</p>
+                      <p className="text-xs text-text-secondary">{t('friends.sentStatus')}</p>
                     </div>
                   </div>
                 ))}
@@ -129,7 +127,7 @@ export default function FriendsPage() {
           {pending.length === 0 && sent.length === 0 && (
             <div className="text-center py-8">
               <Bell className="w-10 h-10 text-text-secondary/40 mx-auto mb-3" />
-              <p className="text-text-secondary text-sm">Sin solicitudes pendientes</p>
+              <p className="text-text-secondary text-sm">{t('friends.noRequests')}</p>
             </div>
           )}
         </div>
@@ -137,7 +135,6 @@ export default function FriendsPage() {
 
       {activeTab === 'ranking' && (
         <div>
-          {/* Tabs de período */}
           <div className="flex gap-2 mb-4">
             <button
               onClick={() => setPeriod('weekly')}
@@ -147,7 +144,7 @@ export default function FriendsPage() {
                   : 'bg-cream-card text-text-secondary hover:bg-border/50 border border-border/50'
               }`}
             >
-              Esta semana
+              {t('friends.periodWeekly')}
             </button>
             <button
               onClick={() => setPeriod('monthly')}
@@ -157,7 +154,7 @@ export default function FriendsPage() {
                   : 'bg-cream-card text-text-secondary hover:bg-border/50 border border-border/50'
               }`}
             >
-              Este mes
+              {t('friends.periodMonthly')}
             </button>
           </div>
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { useLanguage } from '../../hooks/useLanguage'
 import { isToday, isYesterday, format } from 'date-fns'
-import { es } from 'date-fns/locale'
 import { Pencil, Trash2, Clock, AlertTriangle, Zap, Droplets, Wind, Microscope, FileText, CheckCircle, ThumbsUp, Stethoscope } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { getHealthStatusColor } from '../../lib/anthropic'
@@ -21,11 +21,11 @@ const typeEmojis = {
   'Otro': '✏️',
 }
 
-function formatDate(dateStr) {
+function formatDate(dateStr, t) {
   const date = new Date(dateStr)
-  if (isToday(date)) return `Hoy a las ${format(date, 'HH:mm')}`
-  if (isYesterday(date)) return `Ayer a las ${format(date, 'HH:mm')}`
-  return format(date, "d 'de' MMMM 'a las' HH:mm", { locale: es })
+  if (isToday(date)) return `${t('logCard.todayAt')} ${format(date, 'HH:mm')}`
+  if (isYesterday(date)) return `${t('logCard.yesterdayAt')} ${format(date, 'HH:mm')}`
+  return format(date, "d 'de' MMMM 'a las' HH:mm")
 }
 
 function getPhotoUrl(photoUrl) {
@@ -35,15 +35,16 @@ function getPhotoUrl(photoUrl) {
 }
 
 export default function LogCard({ log, onEdit, onDelete }) {
+  const { t } = useLanguage()
   const [confirming, setConfirming] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
 
   const handleDelete = async () => {
     try {
       await onDelete(log.id)
-      toast.success('Registro eliminado')
+      toast.success(t('logCard.deleted'))
     } catch {
-      toast.error('Error al eliminar')
+      toast.error(t('logCard.deleteError'))
     }
     setConfirming(false)
   }
@@ -60,7 +61,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
           <div className="flex items-center gap-2">
             <span className="text-2xl">{log.emoji || typeEmojis[log.type] || '💩'}</span>
             <div>
-              <p className="text-sm font-semibold text-text-primary">{formatDate(log.logged_at)}</p>
+              <p className="text-sm font-semibold text-text-primary">{formatDate(log.logged_at, t)}</p>
               <p className="text-xs text-text-secondary">{log.type}</p>
             </div>
           </div>
@@ -84,13 +85,13 @@ export default function LogCard({ log, onEdit, onDelete }) {
                   onClick={handleDelete}
                   className="px-2 py-1 rounded-lg bg-error text-white text-xs font-medium cursor-pointer"
                 >
-                  Sí
+                  {t('common.yes')}
                 </button>
                 <button
                   onClick={() => setConfirming(false)}
                   className="px-2 py-1 rounded-lg bg-border text-text-secondary text-xs font-medium cursor-pointer"
                 >
-                  No
+                  {t('common.no')}
                 </button>
               </div>
             )}
@@ -112,22 +113,22 @@ export default function LogCard({ log, onEdit, onDelete }) {
           </span>
           {log.had_blood && (
             <span className="bg-error/10 text-error text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-              <AlertTriangle className="w-3 h-3" /> Sangre
+              <AlertTriangle className="w-3 h-3" /> {t('logCard.blood')}
             </span>
           )}
           {log.had_straining && (
             <span className="bg-accent/10 text-accent text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Zap className="w-3 h-3" /> Esfuerzo
+              <Zap className="w-3 h-3" /> {t('logCard.straining')}
             </span>
           )}
           {log.had_splash && (
             <span className="bg-[#5BA8C8]/10 text-[#5BA8C8] text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Droplets className="w-3 h-3" /> Salpicó
+              <Droplets className="w-3 h-3" /> {t('logCard.splash')}
             </span>
           )}
           {log.had_farts && (
             <span className="bg-accent-hover/10 text-accent-hover text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
-              <Wind className="w-3 h-3" /> Pedos
+              <Wind className="w-3 h-3" /> {t('logCard.farts')}
             </span>
           )}
         </div>
@@ -156,7 +157,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
               onClick={() => setModalOpen(true)}
               className="shrink-0 w-12 h-12 rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-accent/30 transition-all cursor-pointer"
             >
-              <img src={photoUrl} alt="Foto" className="w-full h-full object-cover" />
+              <img src={photoUrl} alt={t('logCard.photoAlt')} className="w-full h-full object-cover" />
             </button>
           )}
           {log.notes && (
@@ -165,7 +166,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
         </div>
       </div>
 
-      <PhotoModal src={photoUrl} alt="Foto de la deposición" onClose={() => setModalOpen(false)} />
+      <PhotoModal src={photoUrl} alt={t('logCard.photoPoopAlt')} onClose={() => setModalOpen(false)} />
     </>
   )
 }

@@ -1,10 +1,14 @@
+import { useLanguage } from '../../hooks/useLanguage'
+
 const emojis = ['💩', '🤢', '😅', '😎', '🏆', '💪', '🌈', '🔥', '😱', '🎉']
 
 export default function EmojiPicker({ value, onChange }) {
+  const { t } = useLanguage()
+
   return (
     <div>
       <label className="block text-sm font-semibold text-text-primary mb-3">
-        Emoji representativo
+        {t('log.emoji')}
       </label>
       <div className="flex flex-wrap gap-2">
         {emojis.map((emoji) => (

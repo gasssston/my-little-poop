@@ -1,10 +1,14 @@
+import { useLanguage } from '../../hooks/useLanguage'
+
 const painFaces = ['😊', '😐', '😕', '😣', '😫', '😭']
 
 export default function PainScale({ value, onChange }) {
+  const { t } = useLanguage()
+
   return (
     <div>
       <label className="block text-sm font-semibold text-text-primary mb-3">
-        Nivel de dolor
+        {t('log.painLevel')}
       </label>
       <div className="flex gap-2 justify-between">
         {painFaces.map((face, index) => (

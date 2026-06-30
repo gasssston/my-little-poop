@@ -1,19 +1,20 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import { UserCheck, UserX, Loader2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { formatDistanceToNow } from 'date-fns'
-import { es } from 'date-fns/locale'
 
 export default function FriendRequestCard({ request, onAccept, onReject }) {
+  const { t } = useLanguage()
   const [loading, setLoading] = useState(null)
 
   const handleAccept = async () => {
     setLoading('accept')
     try {
       await onAccept(request.id)
-      toast.success('¡Amistad aceptada!')
+      toast.success(t('friends.accepted'))
     } catch {
-      toast.error('Error al aceptar')
+      toast.error(t('friends.acceptError'))
     } finally {
       setLoading(null)
     }
@@ -24,7 +25,7 @@ export default function FriendRequestCard({ request, onAccept, onReject }) {
     try {
       await onReject(request.id)
     } catch {
-      toast.error('Error al rechazar')
+      toast.error(t('friends.rejectError'))
     } finally {
       setLoading(null)
     }
@@ -41,9 +42,9 @@ export default function FriendRequestCard({ request, onAccept, onReject }) {
           )}
         </div>
         <div>
-          <p className="text-sm font-semibold text-text-primary">{request.peer?.name || 'Desconocido'}</p>
+          <p className="text-sm font-semibold text-text-primary">{request.peer?.name || t('friends.unknown')}</p>
           <p className="text-xs text-text-secondary">
-            {formatDistanceToNow(new Date(request.created_at), { addSuffix: true, locale: es })}
+            {formatDistanceToNow(new Date(request.created_at), { addSuffix: true })}
           </p>
         </div>
       </div>

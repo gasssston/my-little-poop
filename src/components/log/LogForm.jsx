@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useNavigate } from 'react-router-dom'
 import { useLogs } from '../../hooks/useLogs'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { poopLogSchema } from '../../lib/validations'
 import { supabase } from '../../lib/supabase'
 import { bristolToFormType } from '../../lib/anthropic'
@@ -20,7 +21,6 @@ import Slider from '../ui/Slider'
 import Toggle from '../ui/Toggle'
 import PoopCamera from './PoopCamera'
 
-// Convertir Date a string local para input datetime-local
 function toLocalDatetimeString(date) {
   const d = new Date(date)
   const year = d.getFullYear()
@@ -31,7 +31,6 @@ function toLocalDatetimeString(date) {
   return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
-// Convertir string de datetime-local a ISO con timezone local
 function localDatetimeToISO(localStr) {
   const date = new Date(localStr)
   return date.toISOString()
@@ -39,6 +38,7 @@ function localDatetimeToISO(localStr) {
 
 export default function LogForm({ initialData, onSuccess }) {
   const { addLog, updateLog } = useLogs()
+  const { t } = useLanguage()
   const { user } = useAuth()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
@@ -80,7 +80,7 @@ export default function LogForm({ initialData, onSuccess }) {
       const formType = bristolToFormType(result.bristol_type)
       if (formType) {
         setValue('type', formType)
-        toast.success(`Tipo detectado: ${result.bristol_label} — auto-rellenado ✨`)
+        toast.success(`${t('log.analysisComplete')} ${result.bristol_label} ✨`)
       }
     }
   }
@@ -114,7 +114,6 @@ export default function LogForm({ initialData, onSuccess }) {
       let photoUrl = initialData?.photo_url || null
 
       if (photoData) {
-        // Crear el registro primero para tener el ID
         const tempId = initialData?.id || crypto.randomUUID()
         photoUrl = await uploadPhoto(tempId)
       }
@@ -133,12 +132,11 @@ export default function LogForm({ initialData, onSuccess }) {
 
       if (initialData?.id) {
         await updateLog(initialData.id, payload)
-        toast.success('¡Registro actualizado! ✏️')
+        toast.success(t('log.updated'))
         onSuccess?.()
       } else {
         await addLog(payload)
 
-        // Obtener mensaje de celebración random
         const fallbackMessages = [
           { message: '¡ENHORABUENA CAMPEÓN!! Has hecho una cacota enorme 💪', emoji: '💩' },
           { message: '¡Qué pedazo de caca! Te habrás quedado a gusto 😌', emoji: '🏆' },
@@ -166,7 +164,6 @@ export default function LogForm({ initialData, onSuccess }) {
             }
           }
         } catch {
-          // Usar mensaje fallback
         }
 
         navigate('/app/celebration', {
@@ -175,7 +172,7 @@ export default function LogForm({ initialData, onSuccess }) {
         })
       }
     } catch (error) {
-      toast.error(error.message || 'Error al guardar')
+      toast.error(error.message || t('common.error'))
     } finally {
       setLoading(false)
     }
@@ -193,23 +190,22 @@ export default function LogForm({ initialData, onSuccess }) {
         {errors.color && <p className="text-error text-xs mt-2">{errors.color.message}</p>}
       </Card>
 
-      {/* Sección de cámara / Análisis IA */}
       <Card className="border-accent/20">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-bold text-text-primary flex items-center gap-1.5"><Camera className="w-4 h-4 text-accent" /> Analizar mi caca con IA</h3>
+          <h3 className="text-sm font-bold text-text-primary flex items-center gap-1.5"><Camera className="w-4 h-4 text-accent" /> {t('log.analyzeWithAI')}</h3>
           <button
             type="button"
             onClick={() => setShowCamera(!showCamera)}
             className="text-xs text-accent font-semibold hover:text-accent-hover transition-colors cursor-pointer"
           >
-            {showCamera ? 'Ocultar' : 'Expandir'} ▾
+            {showCamera ? t('log.hide') : t('log.expand')} ▾
           </button>
         </div>
         {showCamera && (
           <PoopCamera onAnalysisComplete={handleAnalysisComplete} />
         )}
         {!showCamera && aiResult && (
-          <p className="text-xs text-success font-medium flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> Análisis completado — Tipo Bristol {aiResult.bristol_type}</p>
+          <p className="text-xs text-success font-medium flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5" /> {t('log.analysisComplete')} {aiResult.bristol_type}</p>
         )}
       </Card>
 
@@ -219,7 +215,7 @@ export default function LogForm({ initialData, onSuccess }) {
           onChange={(v) => setValue('duration_minutes', v)}
           min={0}
           max={60}
-          label="Duración"
+          label={t('log.duration')}
           unit="min"
         />
         <div className="flex gap-2 mt-3">
@@ -248,23 +244,23 @@ export default function LogForm({ initialData, onSuccess }) {
         <Toggle
           checked={formValues.had_blood}
           onChange={(v) => setValue('had_blood', v)}
-          label={<span className="flex items-center gap-1.5"><Droplets className="w-3.5 h-3.5 text-error" /> ¿Hubo sangre?</span>}
+          label={<span className="flex items-center gap-1.5"><Droplets className="w-3.5 h-3.5 text-error" /> {t('log.hadBlood')}</span>}
           color="error"
         />
         <Toggle
           checked={formValues.had_straining}
           onChange={(v) => setValue('had_straining', v)}
-          label={<span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> ¿Hubo mucho esfuerzo?</span>}
+          label={<span className="flex items-center gap-1.5"><Zap className="w-3.5 h-3.5" /> {t('log.hadStraining')}</span>}
         />
         <Toggle
           checked={formValues.had_splash}
           onChange={(v) => setValue('had_splash', v)}
-          label={<span className="flex items-center gap-1.5"><Droplet className="w-3.5 h-3.5 text-[#5BA8C8]" /> ¿Ha salpicado?</span>}
+          label={<span className="flex items-center gap-1.5"><Droplet className="w-3.5 h-3.5 text-[#5BA8C8]" /> {t('log.hadSplash')}</span>}
         />
         <Toggle
           checked={formValues.had_farts}
           onChange={(v) => setValue('had_farts', v)}
-          label={<span className="flex items-center gap-1.5"><Wind className="w-3.5 h-3.5" /> ¿Ha venido con pedos?</span>}
+          label={<span className="flex items-center gap-1.5"><Wind className="w-3.5 h-3.5" /> {t('log.hadFarts')}</span>}
         />
       </Card>
 
@@ -277,7 +273,7 @@ export default function LogForm({ initialData, onSuccess }) {
 
       <Card>
         <label className="block text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
-          <Calendar className="w-4 h-4 text-accent" /> Fecha y hora
+          <Calendar className="w-4 h-4 text-accent" /> {t('log.dateTime')}
         </label>
         <div className="flex">
           <input
@@ -294,18 +290,18 @@ export default function LogForm({ initialData, onSuccess }) {
 
       <Card>
         <label className="block text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
-          <FileText className="w-4 h-4 text-accent" /> Notas
+          <FileText className="w-4 h-4 text-accent" /> {t('log.notes')}
         </label>
         <textarea
           {...register('notes')}
           rows={3}
           className="w-full px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all resize-none"
-          placeholder="¿Algo más que quieras contar?"
+          placeholder={t('log.notesPlaceholder')}
         />
       </Card>
 
       <Button type="submit" loading={loading} className="w-full text-lg py-4">
-        {initialData?.id ? 'Actualizar registro ✏️' : 'Registrar mi caca 💩'}
+        {initialData?.id ? t('log.update') : t('log.create')}
       </Button>
     </form>
   )

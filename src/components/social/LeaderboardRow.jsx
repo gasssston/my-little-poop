@@ -1,6 +1,8 @@
+import { useLanguage } from '../../hooks/useLanguage'
 import { Trophy, Medal, Flame } from 'lucide-react'
 
 export default function LeaderboardRow({ player, position, isMe, period }) {
+  const { t } = useLanguage()
   const medals = [
     <Trophy className="w-5 h-5 text-yellow-500" />,
     <Medal className="w-5 h-5 text-gray-400" />,
@@ -34,13 +36,13 @@ export default function LeaderboardRow({ player, position, isMe, period }) {
 
       <div className="flex-1 min-w-0">
         <p className={`text-sm font-semibold truncate ${isMe ? 'text-accent' : 'text-text-primary'}`}>
-          {isMe ? 'Tú' : player.name}
+          {isMe ? t('leaderboard.you') : player.name}
         </p>
       </div>
 
       <div className="text-right">
         <p className="text-sm font-bold text-accent">{player.count} 💩</p>
-        <p className="text-[10px] text-text-secondary flex items-center justify-end gap-0.5"><Flame className="w-3 h-3" /> {player.streak} días</p>
+        <p className="text-[10px] text-text-secondary flex items-center justify-end gap-0.5"><Flame className="w-3 h-3" /> {player.streak} {t('leaderboard.days')}</p>
       </div>
     </div>
   )

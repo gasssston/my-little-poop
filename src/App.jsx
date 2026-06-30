@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './hooks/useAuth'
+import { LanguageProvider } from './hooks/useLanguage'
 import { Toaster } from 'sonner'
 import { Loader2 } from 'lucide-react'
 import AppLayout from './components/layout/AppLayout'
@@ -9,6 +11,7 @@ import LogPage from './pages/LogPage'
 import HistoryPage from './pages/HistoryPage'
 import AccountPage from './pages/AccountPage'
 import FriendsPage from './pages/FriendsPage'
+import StatsPage from './pages/StatsPage'
 import CelebrationPage from './pages/CelebrationPage'
 import { Analytics } from "@vercel/analytics/react"
 
@@ -69,6 +72,7 @@ function AppRoutes() {
         <Route path="history" element={<HistoryPage />} />
         <Route path="friends" element={<FriendsPage />} />
         <Route path="celebration" element={<CelebrationPage />} />
+        <Route path="stats" element={<StatsPage />} />
         <Route path="account" element={<AccountPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/login" replace />} />
@@ -76,10 +80,22 @@ function AppRoutes() {
   )
 }
 
+function ThemeInit() {
+  useEffect(() => {
+    const stored = localStorage.getItem('theme')
+    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark')
+    }
+  }, [])
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ThemeInit />
       <AuthProvider>
+        <LanguageProvider>
         <Toaster
           position="top-center"
           richColors
@@ -94,6 +110,7 @@ export default function App() {
         />
         <Analytics />
         <AppRoutes />
+      </LanguageProvider>
       </AuthProvider>
     </BrowserRouter>
   )

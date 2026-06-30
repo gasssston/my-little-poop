@@ -1,7 +1,9 @@
 import { subDays, isAfter } from 'date-fns'
 import { Flame, Microscope, TrendingUp, BarChart3, RefreshCw, Star } from 'lucide-react'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function StatsBar({ logs }) {
+  const { t } = useLanguage()
   const total = logs.length
 
   const uniqueDays = new Set(
@@ -41,12 +43,12 @@ export default function StatsBar({ logs }) {
     const avgFirst = first.reduce((a, b) => a + b, 0) / first.length
     const avgSecond = second.reduce((a, b) => a + b, 0) / second.length
     const diff = avgSecond - avgFirst
-    if (Math.abs(diff) < 0.3) { trend = 'Estable'; TrendIcon = BarChart3 }
-    else if (diff > 0 && avgSecond <= 5) { trend = 'Mejorando'; TrendIcon = TrendingUp }
-    else if (diff < 0 && avgSecond >= 3) { trend = 'Mejorando'; TrendIcon = TrendingUp }
-    else { trend = 'Cambiando'; TrendIcon = RefreshCw }
+    if (Math.abs(diff) < 0.3) { trend = t('stats.trendStable'); TrendIcon = BarChart3 }
+    else if (diff > 0 && avgSecond <= 5) { trend = t('stats.trendImproving'); TrendIcon = TrendingUp }
+    else if (diff < 0 && avgSecond >= 3) { trend = t('stats.trendImproving'); TrendIcon = TrendingUp }
+    else { trend = t('stats.trendChanging'); TrendIcon = RefreshCw }
   } else if (recentBristol.length === 1) {
-    trend = recentBristol[0] === 4 ? 'Ideal' : `${recentBristol[0]}/7`
+    trend = recentBristol[0] === 4 ? t('stats.trendIdeal') : `${recentBristol[0]}/7`
     TrendIcon = recentBristol[0] === 4 ? Star : BarChart3
   }
 
@@ -54,23 +56,23 @@ export default function StatsBar({ logs }) {
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
       <div className="bg-cream-card rounded-xl border border-border/50 p-3 text-center">
         <div className="text-2xl font-bold text-accent">{total}</div>
-        <div className="text-xs text-text-secondary">Total registros</div>
+        <div className="text-xs text-text-secondary">{t('stats.totalRecords')}</div>
       </div>
       <div className="bg-cream-card rounded-xl border border-border/50 p-3 text-center">
         <div className="text-2xl font-bold text-accent flex items-center justify-center gap-1"><Flame className="w-5 h-5" /> {streak}</div>
-        <div className="text-xs text-text-secondary">Días activos</div>
+        <div className="text-xs text-text-secondary">{t('history.activeDays')}</div>
       </div>
       <div className="bg-cream-card rounded-xl border border-border/50 p-3 text-center">
         <div className="text-2xl font-bold text-accent truncate flex items-center justify-center gap-1">
           {mostFrequentBristol ? <><Microscope className="w-5 h-5" /> {mostFrequentBristol[0]}</> : '—'}
         </div>
-        <div className="text-xs text-text-secondary">Bristol más frecuente</div>
+        <div className="text-xs text-text-secondary">{t('stats.mostFrequentBristol')}</div>
       </div>
       <div className="bg-cream-card rounded-xl border border-border/50 p-3 text-center">
         <div className="text-2xl font-bold text-accent truncate flex items-center justify-center gap-1">
           {TrendIcon && <TrendIcon className="w-5 h-5" />} {trend}
         </div>
-        <div className="text-xs text-text-secondary">Tendencia 7 días</div>
+        <div className="text-xs text-text-secondary">{t('stats.trend7days')}</div>
       </div>
     </div>
   )

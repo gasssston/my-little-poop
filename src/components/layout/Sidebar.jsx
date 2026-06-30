@@ -1,25 +1,27 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { useLanguage } from '../../hooks/useLanguage'
 import { LogOut, PlusCircle, ClipboardList, Users, User } from 'lucide-react'
 import { toast } from 'sonner'
 
-const navItems = [
-  { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
-  { to: '/app/history', icon: ClipboardList, label: 'Historial' },
-  { to: '/app/friends', icon: Users, label: 'Amigos' },
-  { to: '/app/account', icon: User, label: 'Mi cuenta' },
-]
-
 export default function Sidebar() {
   const { signOut } = useAuth()
+  const { t } = useLanguage()
   const navigate = useNavigate()
+
+  const navItems = [
+    { to: '/app/log', icon: PlusCircle, label: t('nav.register') },
+    { to: '/app/history', icon: ClipboardList, label: t('nav.history') },
+    { to: '/app/friends', icon: Users, label: t('nav.friends') },
+    { to: '/app/account', icon: User, label: t('nav.account') },
+  ]
 
   const handleSignOut = async () => {
     try {
       await signOut()
       navigate('/login')
     } catch {
-      toast.error('Error al cerrar sesión')
+      toast.error(t('error.logout'))
     }
   }
 
@@ -56,7 +58,7 @@ export default function Sidebar() {
           className="flex items-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-medium text-error hover:bg-error/10 transition-all duration-200 cursor-pointer"
         >
           <LogOut className="w-4 h-4" />
-          Cerrar sesión
+          {t('nav.logout')}
         </button>
       </div>
     </aside>

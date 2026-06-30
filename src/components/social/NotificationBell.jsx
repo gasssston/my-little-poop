@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Bell } from 'lucide-react'
 import NotificationList from './NotificationList'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function NotificationBell({ unreadCount, notifications, onMarkAsRead, onMarkAllAsRead, onDelete }) {
+  const { t } = useLanguage()
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
   const scrollY = useRef(0)
@@ -69,13 +71,13 @@ export default function NotificationBell({ unreadCount, notifications, onMarkAsR
         }`}
       >
           <div className="sticky top-0 bg-cream-card rounded-t-2xl z-10 flex items-center justify-between p-3 border-b border-border/50">
-            <h3 className="text-sm font-bold text-text-primary">Notificaciones</h3>
+            <h3 className="text-sm font-bold text-text-primary">{t('notifications.title')}</h3>
             {unreadCount > 0 && (
               <button
                 onClick={onMarkAllAsRead}
                 className="text-xs text-accent font-semibold hover:text-accent-hover transition-colors cursor-pointer"
               >
-                Marcar todo leído
+                {t('notifications.markAllRead')}
               </button>
             )}
           </div>

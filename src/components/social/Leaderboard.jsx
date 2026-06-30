@@ -1,8 +1,10 @@
 import { Trophy } from 'lucide-react'
+import { useLanguage } from '../../hooks/useLanguage'
 import LeaderboardRow from './LeaderboardRow'
 import Podium from './Podium'
 
 export default function Leaderboard({ data, myUserId, period }) {
+  const { t } = useLanguage()
   const top3 = data.slice(0, 3)
   const rest = data.slice(3)
 
@@ -10,8 +12,8 @@ export default function Leaderboard({ data, myUserId, period }) {
     return (
       <div className="text-center py-8">
         <Trophy className="w-10 h-10 text-text-secondary/40 mx-auto mb-3" />
-        <p className="text-text-secondary text-sm">Sin datos de clasificación</p>
-        <p className="text-text-secondary text-xs mt-1">Registra cacas para aparecer aquí</p>
+        <p className="text-text-secondary text-sm">{t('leaderboard.empty')}</p>
+        <p className="text-text-secondary text-xs mt-1">{t('leaderboard.emptyHint')}</p>
       </div>
     )
   }

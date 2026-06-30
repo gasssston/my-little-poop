@@ -1,8 +1,10 @@
 import { getHealthStatusColor } from '../../lib/anthropic'
 import Card from '../ui/Card'
+import { useLanguage } from '../../hooks/useLanguage'
 
 export default function AnalysisResult({ result }) {
   const statusStyle = getHealthStatusColor(result.health_status)
+  const { t } = useLanguage()
 
   return (
     <div className="space-y-3">
@@ -11,11 +13,11 @@ export default function AnalysisResult({ result }) {
         <div className="flex items-start justify-between">
           <div>
             <h3 className="text-sm font-bold text-text-primary flex items-center gap-2">
-              🔬 Análisis IA
+              🔬 {t('analysis.title')}
             </h3>
             <div className="mt-2">
               <span className="text-3xl font-extrabold text-accent font-[family-name:var(--font-display)]">
-                Tipo {result.bristol_type}
+                {t('analysis.type')} {result.bristol_type}
               </span>
               {result.bristol_type === 4 && <span className="ml-2">⭐</span>}
             </div>
@@ -32,7 +34,7 @@ export default function AnalysisResult({ result }) {
         </div>
         {result.color_observed && (
           <p className="text-xs text-text-secondary mt-2">
-            Color observado: <span className="font-medium">{result.color_observed}</span>
+            {t('analysis.colorObserved')}: <span className="font-medium">{result.color_observed}</span>
           </p>
         )}
       </Card>
@@ -42,7 +44,7 @@ export default function AnalysisResult({ result }) {
         <div className="space-y-3">
           {result.recommendations?.length > 0 && (
             <div>
-              <h4 className="text-sm font-bold text-text-primary mb-1">💡 Recomendaciones</h4>
+              <h4 className="text-sm font-bold text-text-primary mb-1">💡 {t('analysis.recommendations')}</h4>
               <ul className="space-y-1">
                 {result.recommendations.map((rec, i) => (
                   <li key={i} className="text-xs text-text-secondary flex items-start gap-1.5">
@@ -56,7 +58,7 @@ export default function AnalysisResult({ result }) {
 
           {result.positive_aspects?.length > 0 && (
             <div>
-              <h4 className="text-sm font-bold text-success mb-1">✅ Aspectos positivos</h4>
+              <h4 className="text-sm font-bold text-success mb-1">✅ {t('analysis.positiveAspects')}</h4>
               <ul className="space-y-1">
                 {result.positive_aspects.map((aspect, i) => (
                   <li key={i} className="text-xs text-text-secondary flex items-start gap-1.5">
@@ -70,7 +72,7 @@ export default function AnalysisResult({ result }) {
 
           {result.pathology_risks?.filter(Boolean).length > 0 && (
             <div>
-              <h4 className="text-sm font-bold text-text-primary mb-1">⚠️ Posibles asociaciones</h4>
+              <h4 className="text-sm font-bold text-text-primary mb-1">⚠️ {t('analysis.pathologyRisks')}</h4>
               <ul className="space-y-1">
                 {result.pathology_risks.filter(Boolean).map((risk, i) => (
                   <li key={i} className="text-xs text-text-secondary flex items-start gap-1.5">
@@ -88,7 +90,7 @@ export default function AnalysisResult({ result }) {
       {result.urgency === 'alta' && (
         <div className="bg-error/10 border border-error/30 rounded-xl p-3">
           <p className="text-xs text-error font-semibold">
-            🩺 Te recomendamos consultar con un médico si esto persiste. No somos un sustituto del diagnóstico médico profesional.
+            🩺 {t('analysis.urgencyWarning')}
           </p>
         </div>
       )}
@@ -96,7 +98,7 @@ export default function AnalysisResult({ result }) {
       {/* Card fun fact */}
       {result.fun_fact && (
         <Card className="bg-accent/5 border-accent/20">
-          <h4 className="text-sm font-bold text-accent mb-1">🎉 ¿Sabías que...?</h4>
+          <h4 className="text-sm font-bold text-accent mb-1">🎉 {t('analysis.funFact')}</h4>
           <p className="text-xs text-text-secondary italic">"{result.fun_fact}"</p>
         </Card>
       )}

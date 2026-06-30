@@ -1,9 +1,11 @@
 import { useRef, useState } from 'react'
 import { useProfile } from '../../hooks/useProfile'
+import { useLanguage } from '../../hooks/useLanguage'
 import { Camera } from 'lucide-react'
 import { toast } from 'sonner'
 
 export default function AvatarUpload() {
+  const { t } = useLanguage()
   const { profile, uploadAvatar } = useProfile()
   const [preview, setPreview] = useState(null)
   const [uploading, setUploading] = useState(false)
@@ -13,16 +15,16 @@ export default function AvatarUpload() {
     const file = e.target.files?.[0]
     if (!file) return
     if (file.size > 2 * 1024 * 1024) {
-      toast.error('La imagen debe ser menor a 2MB')
+      toast.error(t('account.avatarTooLarge'))
       return
     }
     setPreview(URL.createObjectURL(file))
     setUploading(true)
     try {
       await uploadAvatar(file)
-      toast.success('Avatar actualizado ✨')
+      toast.success(t('account.avatarUpdated'))
     } catch {
-      toast.error('Error al subir la imagen')
+      toast.error(t('account.avatarError'))
       setPreview(null)
     } finally {
       setUploading(false)
@@ -53,9 +55,9 @@ export default function AvatarUpload() {
           className="text-sm text-accent font-semibold hover:text-accent-hover transition-colors cursor-pointer disabled:opacity-50"
         >
           <Camera className="w-4 h-4 inline mr-1" />
-          {uploading ? 'Subiendo...' : 'Cambiar foto'}
+          {uploading ? t('account.uploading') : t('account.changePhoto')}
         </button>
-        <p className="text-xs text-text-secondary mt-0.5">JPG, PNG. Máx 2MB</p>
+        <p className="text-xs text-text-secondary mt-0.5">{t('account.photoHint')}</p>
       </div>
       <input
         ref={fileRef}

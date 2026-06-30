@@ -1,11 +1,13 @@
 import { useState, useRef } from 'react'
 import { Camera, Upload, Trash2, Loader2 } from 'lucide-react'
+import { useLanguage } from '../../hooks/useLanguage'
 import { compressImage, createPreviewURL } from '../../lib/imageUtils'
 import { analyzePoopImage } from '../../lib/anthropic'
 import { toast } from 'sonner'
 import AnalysisResult from './AnalysisResult'
 
 export default function PoopCamera({ onAnalysisComplete }) {
+  const { t } = useLanguage()
   const [preview, setPreview] = useState(null)
   const [analyzing, setAnalyzing] = useState(false)
   const [analysisResult, setAnalysisResult] = useState(null)
@@ -17,12 +19,12 @@ export default function PoopCamera({ onAnalysisComplete }) {
     if (!file) return
 
     if (!file.type.startsWith('image/')) {
-      toast.error('Por favor selecciona una imagen')
+      toast.error(t('log.camera.selectImageError'))
       return
     }
 
     if (file.size > 10 * 1024 * 1024) {
-      toast.error('La imagen es demasiado grande (máx 10MB)')
+      toast.error(t('log.camera.imageTooLarge'))
       return
     }
 
@@ -33,7 +35,7 @@ export default function PoopCamera({ onAnalysisComplete }) {
       const compressed = await compressImage(file)
       setImageData(compressed)
     } catch {
-      toast.error('Error al procesar la imagen')
+      toast.error(t('log.camera.processError'))
       setPreview(null)
     }
   }
@@ -53,13 +55,13 @@ export default function PoopCamera({ onAnalysisComplete }) {
 
       setAnalysisResult(result)
       onAnalysisComplete?.(result)
-      toast.success('Análisis completado 🔬')
+      toast.success(t('log.camera.analysisComplete'))
     } catch (err) {
       const msg = err.message || ''
       if (msg.includes('rate') || msg.includes('429') || msg.includes('no disponible')) {
-        toast.error('El servicio de análisis no está disponible en este momento. Por favor, inténtalo de nuevo más tarde.')
+        toast.error(t('log.camera.serviceUnavailable'))
       } else {
-        toast.error('Error al analizar la imagen. Por favor, inténtalo de nuevo.')
+        toast.error(t('log.camera.analysisError'))
       }
       setAnalysisResult(null)
     } finally {
@@ -80,7 +82,7 @@ export default function PoopCamera({ onAnalysisComplete }) {
   return (
     <div className="space-y-4">
       <p className="text-xs text-text-secondary">
-        Tu foto se guarda de forma privada y solo tú puedes verla 🔒
+        {t('log.camera.privateNote')}
       </p>
 
       {!preview ? (
@@ -94,7 +96,7 @@ export default function PoopCamera({ onAnalysisComplete }) {
             className="flex-1 flex items-center justify-center gap-2 px-4 py-4 rounded-xl border-2 border-dashed border-border hover:border-accent bg-white/30 hover:bg-white/50 text-text-secondary hover:text-accent transition-all duration-200 cursor-pointer"
           >
             <Camera className="w-5 h-5" />
-            <span className="text-sm font-medium">Hacer foto</span>
+            <span className="text-sm font-medium">{t('log.camera.takePhoto')}</span>
           </button>
           <button
             type="button"
@@ -105,7 +107,7 @@ export default function PoopCamera({ onAnalysisComplete }) {
             className="flex-1 flex items-center justify-center gap-2 px-4 py-4 rounded-xl border-2 border-dashed border-border hover:border-accent bg-white/30 hover:bg-white/50 text-text-secondary hover:text-accent transition-all duration-200 cursor-pointer"
           >
             <Upload className="w-5 h-5" />
-            <span className="text-sm font-medium">Subir imagen</span>
+            <span className="text-sm font-medium">{t('log.camera.upload')}</span>
           </button>
         </div>
       ) : (
@@ -135,11 +137,11 @@ export default function PoopCamera({ onAnalysisComplete }) {
               {analyzing ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
-                  Analizando tu obra de arte... 💩
+                  {t('log.camera.analyzing')}
                 </>
               ) : (
                 <>
-                  🔬 Analizar ahora
+                  {t('log.camera.analyzeNow')}
                 </>
               )}
             </button>
