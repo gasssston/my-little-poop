@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { PlusCircle, ClipboardList, Users, User } from 'lucide-react'
+import NotificationBell from '../social/NotificationBell'
 
 const tabs = [
   { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
@@ -8,7 +9,9 @@ const tabs = [
   { to: '/app/account', icon: User, label: 'Cuenta' },
 ]
 
-export default function BottomTabs() {
+export default function BottomTabs({ notificationData }) {
+  const { notifications = [], unreadCount = 0, markAsRead = () => {}, markAllAsRead = () => {} } = notificationData || {}
+
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-cream-card border-t border-border z-40 safe-area-bottom">
       <div className="flex justify-around items-center h-16">
@@ -28,6 +31,12 @@ export default function BottomTabs() {
             <span className="text-[10px] font-semibold">{tab.label}</span>
           </NavLink>
         ))}
+        <NotificationBell
+          unreadCount={unreadCount}
+          notifications={notifications}
+          onMarkAsRead={markAsRead}
+          onMarkAllAsRead={markAllAsRead}
+        />
       </div>
     </nav>
   )

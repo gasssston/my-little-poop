@@ -1,6 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
-import { useNotifications } from '../../hooks/useNotifications'
 import { LogOut, PlusCircle, ClipboardList, Users, User } from 'lucide-react'
 import { toast } from 'sonner'
 import NotificationBell from '../social/NotificationBell'
@@ -12,10 +11,10 @@ const navItems = [
   { to: '/app/account', icon: User, label: 'Mi cuenta' },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ notificationData }) {
   const { signOut } = useAuth()
   const navigate = useNavigate()
-  const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications()
+  const { notifications = [], unreadCount = 0, markAsRead = () => {}, markAllAsRead = () => {} } = notificationData || {}
 
   const handleSignOut = async () => {
     try {

@@ -6,12 +6,14 @@ import { registerSchema } from '../../lib/validations'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../ui/Button'
-import { UserPlus } from 'lucide-react'
+import { UserPlus, Eye, EyeOff } from 'lucide-react'
 
 export default function RegisterForm() {
   const { signUp } = useAuth()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
@@ -56,23 +58,41 @@ export default function RegisterForm() {
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1">Contraseña</label>
-        <input
-          type="password"
-          {...register('password')}
-          className="w-full px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-          placeholder="••••••"
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? 'text' : 'password'}
+            {...register('password')}
+            className="w-full px-4 py-3 pr-11 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
+            placeholder="••••••"
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+          >
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+        </div>
         {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
       </div>
 
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1">Confirmar contraseña</label>
-        <input
-          type="password"
-          {...register('confirmPassword')}
-          className="w-full px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-          placeholder="••••••"
-        />
+        <div className="relative">
+          <input
+            type={showConfirm ? 'text' : 'password'}
+            {...register('confirmPassword')}
+            className="w-full px-4 py-3 pr-11 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
+            placeholder="••••••"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm(!showConfirm)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+          >
+            {showConfirm ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+        </div>
         {errors.confirmPassword && <p className="text-error text-xs mt-1">{errors.confirmPassword.message}</p>}
       </div>
 
