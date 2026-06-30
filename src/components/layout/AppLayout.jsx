@@ -5,7 +5,7 @@ import BottomTabs from './BottomTabs'
 import NotificationBell from '../social/NotificationBell'
 
 export default function AppLayout() {
-  const { notifications = [], unreadCount = 0, markAsRead, markAllAsRead } = useNotifications()
+  const { notifications = [], unreadCount = 0, markAsRead, markAllAsRead, deleteNotification } = useNotifications()
 
   return (
     <div className="min-h-screen bg-cream">
@@ -15,6 +15,7 @@ export default function AppLayout() {
           notifications={notifications}
           onMarkAsRead={markAsRead}
           onMarkAllAsRead={markAllAsRead}
+          onDelete={deleteNotification}
         />
       </div>
       <Sidebar />

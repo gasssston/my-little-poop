@@ -91,6 +91,20 @@ export function useNotifications() {
     setUnreadCount((prev) => Math.max(0, prev - 1))
   }
 
+  const deleteNotification = async (notificationId) => {
+    const { error } = await supabase
+      .from('notifications')
+      .delete()
+      .eq('id', notificationId)
+    if (error) throw error
+
+    setNotifications((prev) => {
+      const deleted = prev.find((n) => n.id === notificationId)
+      return prev.filter((n) => n.id !== notificationId)
+    })
+    setUnreadCount((prev) => Math.max(0, prev - 1))
+  }
+
   const markAllAsRead = async () => {
     const { error } = await supabase
       .from('notifications')
@@ -103,5 +117,5 @@ export function useNotifications() {
     setUnreadCount(0)
   }
 
-  return { notifications, unreadCount, markAsRead, markAllAsRead, loading }
+  return { notifications, unreadCount, markAsRead, markAllAsRead, deleteNotification, loading }
 }
