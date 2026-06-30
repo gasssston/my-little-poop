@@ -2,7 +2,6 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { LogOut, PlusCircle, ClipboardList, Users, User } from 'lucide-react'
 import { toast } from 'sonner'
-import NotificationBell from '../social/NotificationBell'
 
 const navItems = [
   { to: '/app/log', icon: PlusCircle, label: 'Registrar' },
@@ -11,10 +10,9 @@ const navItems = [
   { to: '/app/account', icon: User, label: 'Mi cuenta' },
 ]
 
-export default function Sidebar({ notificationData }) {
+export default function Sidebar() {
   const { signOut } = useAuth()
   const navigate = useNavigate()
-  const { notifications = [], unreadCount = 0, markAsRead = () => {}, markAllAsRead = () => {} } = notificationData || {}
 
   const handleSignOut = async () => {
     try {
@@ -52,13 +50,7 @@ export default function Sidebar({ notificationData }) {
         ))}
       </nav>
 
-      <div className="p-4 border-t border-border/50 space-y-2">
-        <NotificationBell
-          unreadCount={unreadCount}
-          notifications={notifications}
-          onMarkAsRead={markAsRead}
-          onMarkAllAsRead={markAllAsRead}
-        />
+      <div className="p-4 border-t border-border/50">
         <button
           onClick={handleSignOut}
           className="flex items-center gap-2 w-full px-4 py-3 rounded-xl text-sm font-medium text-error hover:bg-error/10 transition-all duration-200 cursor-pointer"
