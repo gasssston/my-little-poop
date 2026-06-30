@@ -67,6 +67,11 @@ input[type="color"]::-webkit-color-swatch {
   border-radius: 9999px;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @keyframes poop-bounce {
   0%, 100% { transform: translateY(0) rotate(-5deg) scale(1); }
   25%       { transform: translateY(-20px) rotate(5deg) scale(1.1); }

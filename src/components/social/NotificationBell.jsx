@@ -5,14 +5,28 @@ import NotificationList from './NotificationList'
 export default function NotificationBell({ unreadCount, notifications, onMarkAsRead, onMarkAllAsRead, onDelete }) {
   const [open, setOpen] = useState(false)
   const ref = useRef(null)
+  const scrollY = useRef(0)
 
   useEffect(() => {
     if (open) {
+      scrollY.current = window.scrollY
       document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY.current}px`
+      document.body.style.width = '100%'
     } else {
       document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      window.scrollTo(0, scrollY.current)
     }
-    return () => { document.body.style.overflow = '' }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+    }
   }, [open])
 
   useEffect(() => {
@@ -27,12 +41,12 @@ export default function NotificationBell({ unreadCount, notifications, onMarkAsR
 
   return (
     <div className="relative" ref={ref}>
-      <div
-        className={`fixed inset-0 bg-black/30 z-40 transition-opacity duration-200 ${
-          open ? 'opacity-100' : 'opacity-0 pointer-events-none'
-        }`}
-        onClick={() => setOpen(false)}
-      />
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40 animate-[fadeIn_150ms_ease]"
+          onClick={() => setOpen(false)}
+        />
+      )}
 
       <button
         onClick={() => setOpen(!open)}
@@ -40,9 +54,12 @@ export default function NotificationBell({ unreadCount, notifications, onMarkAsR
       >
         <Bell className="w-5 h-5" />
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center">
-            {unreadCount > 9 ? '9+' : unreadCount}
-          </span>
+          <>
+            <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-error rounded-full animate-ping opacity-75" />
+            <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-error text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          </>
         )}
       </button>
 
