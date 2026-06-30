@@ -275,14 +275,14 @@ export default function LogForm({ initialData, onSuccess }) {
         />
       </Card>
 
-      <Card className="overflow-hidden">
+      <Card>
         <label className="block text-sm font-semibold text-text-primary mb-2 flex items-center gap-1.5">
           <Calendar className="w-4 h-4 text-accent" /> Fecha y hora
         </label>
         <input
           type="datetime-local"
           {...register('logged_at')}
-          className="w-full min-w-0 px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
+          className="w-full max-w-full min-w-0 px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
         />
       </Card>
 
