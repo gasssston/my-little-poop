@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Trash2, Loader2, Flame } from 'lucide-react'
+import { Trash2, Loader2, Flame, Bell } from 'lucide-react'
 import { toast } from 'sonner'
 
-export default function FriendCard({ friend, onRemove }) {
+export default function FriendCard({ friend, onRemove, onNudge }) {
   const [confirming, setConfirming] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [nudging, setNudging] = useState(false)
 
   const handleRemove = async () => {
     setLoading(true)
@@ -16,6 +17,18 @@ export default function FriendCard({ friend, onRemove }) {
     } finally {
       setLoading(false)
       setConfirming(false)
+    }
+  }
+
+  const handleNudge = async () => {
+    setNudging(true)
+    try {
+      await onNudge(friend.peer?.id)
+      toast.success('Toque enviado 👋')
+    } catch {
+      toast.error('Error al enviar toque')
+    } finally {
+      setNudging(false)
     }
   }
 
@@ -35,7 +48,15 @@ export default function FriendCard({ friend, onRemove }) {
           <p className="text-xs text-text-secondary flex items-center gap-1"><Flame className="w-3 h-3" /> {friend.streak || 0} días de racha</p>
         </div>
       </div>
-      <div>
+      <div className="flex items-center gap-1">
+        <button
+          onClick={handleNudge}
+          disabled={nudging}
+          className="p-2 rounded-lg hover:bg-accent/10 text-text-secondary hover:text-accent transition-all cursor-pointer"
+          title="Dar un toque"
+        >
+          {nudging ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />}
+        </button>
         {!confirming ? (
           <button
             onClick={() => setConfirming(true)}

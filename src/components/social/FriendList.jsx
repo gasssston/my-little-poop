@@ -1,7 +1,7 @@
 import { Users } from 'lucide-react'
 import FriendCard from './FriendCard'
 
-export default function FriendList({ friends, onRemove }) {
+export default function FriendList({ friends, onRemove, onNudge }) {
   if (friends.length === 0) {
     return (
       <div className="text-center py-8">
@@ -15,7 +15,7 @@ export default function FriendList({ friends, onRemove }) {
   return (
     <div className="space-y-2">
       {friends.map((friend) => (
-        <FriendCard key={friend.id} friend={friend} onRemove={onRemove} />
+        <FriendCard key={friend.id} friend={friend} onRemove={onRemove} onNudge={onNudge} />
       ))}
     </div>
   )

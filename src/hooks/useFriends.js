@@ -15,9 +15,6 @@ function calcStreak(logs) {
     logs.map((l) => new Date(l.logged_at).toDateString())
   )].sort((a, b) => new Date(b) - new Date(a))
 
-  const today = new Date().toDateString()
-  if (dates[0] !== today) return 0
-
   let streak = 1
   for (let i = 0; i < dates.length - 1; i++) {
     const current = new Date(dates[i])
@@ -245,6 +242,24 @@ export function useFriends() {
     await fetchFriends()
   }
 
+  const nudgeFriend = async (friendId) => {
+    const { data: myProfile } = await supabase
+      .from('profiles')
+      .select('name')
+      .eq('id', user.id)
+      .single()
+
+    const { error } = await supabase.from('notifications').insert([{
+      user_id: friendId,
+      actor_id: user.id,
+      type: 'nudge',
+      message: `${myProfile?.name || 'Alguien'} te ha dado un toque 👋💩`,
+      metadata: {},
+    }])
+
+    if (error) throw error
+  }
+
   return {
     friends,
     pending,
@@ -254,6 +269,7 @@ export function useFriends() {
     acceptRequest,
     rejectRequest,
     removeFriend,
+    nudgeFriend,
     loading,
     refetch: fetchFriends,
   }

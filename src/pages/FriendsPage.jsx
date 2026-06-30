@@ -16,7 +16,7 @@ const tabs = [
 
 export default function FriendsPage() {
   const { user } = useAuth()
-  const { friends, pending, sent, searchUsers, sendRequest, acceptRequest, rejectRequest, removeFriend, loading } = useFriends()
+  const { friends, pending, sent, searchUsers, sendRequest, acceptRequest, rejectRequest, removeFriend, nudgeFriend, loading } = useFriends()
   const { weekly, monthly, myPosition, loading: leaderboardLoading } = useLeaderboard(
     friends.map((f) => f.peer?.id).filter(Boolean)
   )
@@ -84,7 +84,7 @@ export default function FriendsPage() {
               <Users className="w-8 h-8 text-accent animate-bounce mx-auto" />
             </div>
           ) : (
-            <FriendList friends={friends} onRemove={removeFriend} />
+            <FriendList friends={friends} onRemove={removeFriend} onNudge={nudgeFriend} />
           )}
         </div>
       )}

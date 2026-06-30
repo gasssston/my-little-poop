@@ -133,7 +133,7 @@ CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   actor_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
-  type TEXT NOT NULL CHECK (type IN ('friend_request', 'friend_accepted', 'friend_pooped', 'streak_milestone')),
+  type TEXT NOT NULL CHECK (type IN ('friend_request', 'friend_accepted', 'friend_pooped', 'streak_milestone', 'nudge')),
   message TEXT NOT NULL,
   read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW(),

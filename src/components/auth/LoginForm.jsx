@@ -6,13 +6,14 @@ import { loginSchema } from '../../lib/validations'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'sonner'
 import Button from '../ui/Button'
-import { LogIn, X, Key } from 'lucide-react'
+import { LogIn, X, Key, Eye, EyeOff } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 
 export default function LoginForm() {
   const { signIn } = useAuth()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
   const [showReset, setShowReset] = useState(false)
   const [resetEmail, setResetEmail] = useState('')
   const [resetLoading, setResetLoading] = useState(false)
@@ -68,12 +69,21 @@ export default function LoginForm() {
 
         <div>
           <label className="block text-sm font-medium text-text-primary mb-1">Contraseña</label>
-          <input
-            type="password"
-            {...register('password')}
-            className="w-full px-4 py-3 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-            placeholder="••••••"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? 'text' : 'password'}
+              {...register('password')}
+              className="w-full px-4 py-3 pr-11 rounded-xl border border-border bg-white/50 text-text-primary placeholder:text-text-secondary/50 focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
+              placeholder="••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-secondary hover:text-text-primary transition-colors cursor-pointer"
+            >
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+            </button>
+          </div>
           {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
         </div>
 
