@@ -47,7 +47,7 @@ export default function NotificationBell({ unreadCount, notifications, onMarkAsR
       </button>
 
       <div
-        className={`fixed right-4 top-16 w-80 bg-cream-card rounded-2xl border border-border shadow-lg z-50 flex flex-col max-h-[calc(100vh-6rem)] transition-all duration-200 origin-top-right ${
+        className={`fixed right-4 top-16 w-80 bg-cream-card rounded-2xl border border-border shadow-lg z-50 flex flex-col max-h-[70vh] transition-all duration-200 origin-top-right ${
           open ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'
         }`}
       >
