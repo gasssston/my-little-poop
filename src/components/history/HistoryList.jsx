@@ -5,6 +5,7 @@ import { useLanguage } from '../../hooks/useLanguage'
 import StatsBar from './StatsBar'
 import LogCard from './LogCard'
 import LogForm from '../log/LogForm'
+import PageHeader from '../layout/PageHeader'
 import { useNavigate } from 'react-router-dom'
 import { isToday, isThisWeek, isThisMonth } from 'date-fns'
 
@@ -53,11 +54,7 @@ export default function HistoryList() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <ClipboardList className="w-6 h-6 text-accent" /> {t('nav.history')}
-        </h1>
-      </div>
+      <PageHeader title={t('nav.history')} icon={ClipboardList} />
 
       <StatsBar logs={logs} />
 

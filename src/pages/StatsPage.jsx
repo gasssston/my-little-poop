@@ -4,6 +4,7 @@ import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
 import { BarChart3, Flame, Smile, Download, Calendar } from 'lucide-react'
 import Card from '../components/ui/Card'
+import PageHeader from '../components/layout/PageHeader'
 
 const POOP_TYPES = [
   'Muy dura / Pellets',
@@ -118,11 +119,7 @@ export default function StatsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between mb-2">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <BarChart3 className="w-6 h-6 text-accent" /> {t('stats.title')}
-        </h1>
-      </div>
+      <PageHeader title={t('stats.title')} icon={BarChart3} />
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">

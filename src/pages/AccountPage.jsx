@@ -6,6 +6,7 @@ import { LogOut, User } from 'lucide-react'
 import ProfileForm from '../components/account/ProfileForm'
 import PasswordForm from '../components/account/PasswordForm'
 import Card from '../components/ui/Card'
+import PageHeader from '../components/layout/PageHeader'
 
 export default function AccountPage() {
   const { signOut } = useAuth()
@@ -23,11 +24,7 @@ export default function AccountPage() {
 
   return (
     <div className="space-y-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <User className="w-6 h-6 text-accent" /> {t('account.title')}
-        </h1>
-      </div>
+      <PageHeader title={t('account.title')} icon={User} />
 
       <ProfileForm />
       <PasswordForm />

@@ -8,6 +8,7 @@ import FriendSearch from '../components/social/FriendSearch'
 import FriendRequestCard from '../components/social/FriendRequestCard'
 import FriendList from '../components/social/FriendList'
 import Leaderboard from '../components/social/Leaderboard'
+import PageHeader from '../components/layout/PageHeader'
 
 export default function FriendsPage() {
   const { user } = useAuth()
@@ -40,14 +41,7 @@ export default function FriendsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-extrabold text-text-primary font-[family-name:var(--font-display)] flex items-center gap-2">
-          <Users className="w-6 h-6 text-accent" /> {t('friends.title')}
-        </h1>
-        <p className="text-text-secondary text-sm mt-1">
-          {t('friends.subtitle')}
-        </p>
-      </div>
+      <PageHeader title={t('friends.title')} subtitle={t('friends.subtitle')} icon={Users} />
 
       <div className="flex gap-2 mb-6 overflow-x-auto pb-1">
         {tabs.map((tab) => (

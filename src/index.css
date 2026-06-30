@@ -26,6 +26,19 @@
   --color-border: #2a2a4e;
 }
 
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: rgba(208, 200, 188, 0.7) !important;
+}
+
+.dark .eye-toggle {
+  color: rgba(208, 200, 188, 0.75) !important;
+}
+
+.dark .eye-toggle:hover {
+  color: rgba(232, 224, 216, 0.9) !important;
+}
+
 body {
   font-family: var(--font-body);
   background-color: var(--color-cream);
