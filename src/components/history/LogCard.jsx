@@ -34,7 +34,7 @@ function getPhotoUrl(photoUrl) {
   return data?.publicUrl || null
 }
 
-export default function LogCard({ log, onEdit, onDelete }) {
+export default function LogCard({ log, onEdit, onDelete, readOnly }) {
   const { t } = useLanguage()
   const [confirming, setConfirming] = useState(false)
   const [modalOpen, setModalOpen] = useState(false)
@@ -66,34 +66,38 @@ export default function LogCard({ log, onEdit, onDelete }) {
             </div>
           </div>
           <div className="flex items-center gap-1">
-            <button
-              onClick={() => onEdit(log)}
-              className="p-2 rounded-lg hover:bg-border/50 text-text-secondary hover:text-accent transition-all cursor-pointer"
-            >
-              <Pencil className="w-4 h-4" />
-            </button>
-            {!confirming ? (
-              <button
-                onClick={() => setConfirming(true)}
-                className="p-2 rounded-lg hover:bg-error/10 text-text-secondary hover:text-error transition-all cursor-pointer"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            ) : (
-              <div className="flex gap-1">
+            {!readOnly && (
+              <>
                 <button
-                  onClick={handleDelete}
-                  className="px-2 py-1 rounded-lg bg-error text-white text-xs font-medium cursor-pointer"
+                  onClick={() => onEdit(log)}
+                  className="p-2 rounded-lg hover:bg-border/50 text-text-secondary hover:text-accent transition-all cursor-pointer"
                 >
-                  {t('common.yes')}
+                  <Pencil className="w-4 h-4" />
                 </button>
-                <button
-                  onClick={() => setConfirming(false)}
-                  className="px-2 py-1 rounded-lg bg-border text-text-secondary text-xs font-medium cursor-pointer"
-                >
-                  {t('common.no')}
-                </button>
-              </div>
+                {!confirming ? (
+                  <button
+                    onClick={() => setConfirming(true)}
+                    className="p-2 rounded-lg hover:bg-error/10 text-text-secondary hover:text-error transition-all cursor-pointer"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <div className="flex gap-1">
+                    <button
+                      onClick={handleDelete}
+                      className="px-2 py-1 rounded-lg bg-error text-white text-xs font-medium cursor-pointer"
+                    >
+                      {t('common.yes')}
+                    </button>
+                    <button
+                      onClick={() => setConfirming(false)}
+                      className="px-2 py-1 rounded-lg bg-border text-text-secondary text-xs font-medium cursor-pointer"
+                    >
+                      {t('common.no')}
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </div>
@@ -152,7 +156,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
 
         {/* Foto y notas */}
         <div className="flex items-start gap-3 mt-3">
-          {photoUrl && (
+          {!readOnly && photoUrl && (
             <button
               onClick={() => setModalOpen(true)}
               className="shrink-0 w-12 h-12 rounded-lg overflow-hidden border border-border hover:ring-2 hover:ring-accent/30 transition-all cursor-pointer"
@@ -166,7 +170,7 @@ export default function LogCard({ log, onEdit, onDelete }) {
         </div>
       </div>
 
-      <PhotoModal src={photoUrl} alt={t('logCard.photoPoopAlt')} onClose={() => setModalOpen(false)} />
+      {!readOnly && <PhotoModal src={photoUrl} alt={t('logCard.photoPoopAlt')} onClose={() => setModalOpen(false)} />}
     </>
   )
 }

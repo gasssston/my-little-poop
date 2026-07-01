@@ -1,8 +1,9 @@
 import { useMemo, Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useLogs } from '../hooks/useLogs'
 import { useLanguage } from '../hooks/useLanguage'
 import { useTheme } from '../hooks/useTheme'
-import { BarChart3, Flame, Smile, Download, Calendar } from 'lucide-react'
+import { BarChart3, Flame, Smile, Download, Calendar, ArrowLeft } from 'lucide-react'
 import Card from '../components/ui/Card'
 import PageHeader from '../components/layout/PageHeader'
 
@@ -17,6 +18,7 @@ const POOP_TYPES = [
 ]
 
 export default function StatsPage() {
+  const navigate = useNavigate()
   const { logs, loading } = useLogs()
   const { t, lang } = useLanguage()
   const { dark } = useTheme()
@@ -119,6 +121,13 @@ export default function StatsPage() {
 
   return (
     <div className="space-y-6">
+      <button
+        onClick={() => navigate('/app/history')}
+        className="flex items-center gap-1.5 text-sm text-text-secondary hover:text-accent transition-all mb-1 mt-4 cursor-pointer"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        {t('history.back')}
+      </button>
       <PageHeader title={t('stats.title')} icon={BarChart3} />
 
       {/* Summary cards */}

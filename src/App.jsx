@@ -11,6 +11,7 @@ import LogPage from './pages/LogPage'
 import HistoryPage from './pages/HistoryPage'
 import AccountPage from './pages/AccountPage'
 import FriendsPage from './pages/FriendsPage'
+import FriendFeedPage from './pages/FriendFeedPage'
 import StatsPage from './pages/StatsPage'
 import CelebrationPage from './pages/CelebrationPage'
 import { Analytics } from "@vercel/analytics/react"
@@ -71,6 +72,7 @@ function AppRoutes() {
         <Route path="log" element={<LogPage />} />
         <Route path="history" element={<HistoryPage />} />
         <Route path="friends" element={<FriendsPage />} />
+        <Route path="friends/:friendId" element={<FriendFeedPage />} />
         <Route path="celebration" element={<CelebrationPage />} />
         <Route path="stats" element={<StatsPage />} />
         <Route path="account" element={<AccountPage />} />
