@@ -137,6 +137,12 @@ export default function LogForm({ initialData, onSuccess }) {
       } else {
         await addLog(payload)
 
+        fetch('/api/send-push', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ userId: user.id, emoji: data.emoji }),
+        }).catch(() => {})
+
         const fallbackMessages = [
           { message: '¡ENHORABUENA CAMPEÓN!! Has hecho una cacota enorme 💪', emoji: '💩' },
           { message: '¡Qué pedazo de caca! Te habrás quedado a gusto 😌', emoji: '🏆' },

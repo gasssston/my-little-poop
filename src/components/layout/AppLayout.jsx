@@ -1,8 +1,11 @@
 import { Outlet } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import BottomTabs from './BottomTabs'
+import { usePushNotifications } from '../../hooks/usePushNotifications'
 
 export default function AppLayout() {
+  usePushNotifications()
+
   return (
     <div className="min-h-screen bg-cream">
       <Sidebar />
