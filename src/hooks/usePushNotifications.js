@@ -15,20 +15,24 @@ function urlBase64ToUint8Array(base64String) {
   return outputArray
 }
 
+const pushSupported = () =>
+  'serviceWorker' in navigator &&
+  'PushManager' in window &&
+  'Notification' in window
+
 export function usePushNotifications() {
   const { user } = useAuth()
   const [swRegistration, setSwRegistration] = useState(null)
   const [permission, setPermission] = useState(
-    'Notification' in window ? Notification.permission : 'denied'
+    pushSupported() ? Notification.permission : 'denied'
   )
 
   useEffect(() => {
-    if (!user) return
-    if (!('serviceWorker' in navigator) || !('PushManager' in window)) return
+    if (!user || !pushSupported()) return
 
     navigator.serviceWorker.register('/sw.js')
       .then((reg) => setSwRegistration(reg))
-      .catch(console.error)
+      .catch(() => {})
   }, [user])
 
   useEffect(() => {
@@ -48,8 +52,8 @@ export function usePushNotifications() {
         await supabase
           .from('push_subscriptions')
           .insert({ user_id: user.id, subscription: sub.toJSON() })
-      } catch (err) {
-        if (err.code !== '23505') console.error('Push subscribe error:', err)
+      } catch {
+        /* push not available — skip silently */
       }
     }
 
